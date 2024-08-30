@@ -1,0 +1,57 @@
+  [
+    {
+      "username": "johnDoe",
+      "email": "john.doe@example.com",
+      "firstName": "John",
+      "lastName": "Doe",
+      "password": "password123",
+      "dateOfBirth": "2000-01-01",
+      "weight": 75,
+      "activityLevel": "active",
+      "nutrition": {
+        "dailyCalories": 2500,
+        "macros": {
+          "protein": 150,
+          "carbs": 300,
+          "fat": 80
+        }
+      }
+    },
+    {
+      "username": "janeDoe",
+      "email": "jane.doe@example.com",
+      "firstName": "Jane",
+      "lastName": "Doe",
+      "password": "password123",
+      "dateOfBirth": "1990-01-01",
+      "weight": 65,
+      "activityLevel": "very active",
+      "nutrition": {
+        "dailyCalories": 2200,
+        "macros": {
+          "protein": 120,
+          "carbs": 280,
+          "fat": 70
+        }
+      }
+    },
+    {
+      "username": "samSmith",
+      "email": "sam.smith@example.com",
+      "firstName": "Sam",
+      "lastName": "Smith",
+      "password": "password123",
+      "dateOfBirth": "1980-01-01",
+      "weight": 85,
+      "activityLevel": "sedentary",
+      "nutrition": {
+        "dailyCalories": 2000,
+        "macros": {
+          "protein": 100,
+          "carbs": 250,
+          "fat": 60
+        }
+      }
+    }
+  ]
+
