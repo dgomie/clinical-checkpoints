@@ -1,4 +1,4 @@
-const { User } = require('../models');
+const { User, CheckPoint } = require('../models');
 const { signToken, AuthenticationError } = require('../utils/auth');
 const mongoose = require('mongoose');
 
@@ -14,6 +14,14 @@ const resolvers = {
 
     userById: async (parent, { id }) => {
       return await User.findById(id);
+    },
+
+    checkPoints: async () => {
+      return await CheckPoint.find();
+    },
+
+    checkPoint: async (parent, { id }) => {
+      return await CheckPoint.findById(id);
     },
   },
 
@@ -62,6 +70,11 @@ const resolvers = {
         { new: true }
       );
       return updatedUser;
+    },
+
+    addCheckPoint: async (parent, { input }) => {
+      const checkPoint = await CheckPoint.create(input);
+      return checkPoint;
     },
 
   },

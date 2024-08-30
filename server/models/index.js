@@ -1,3 +1,4 @@
 const User = require('./User');
+const CheckPoint = require('./CheckPoint')
 
-module.exports = { User };
+module.exports = { User, CheckPoint };
