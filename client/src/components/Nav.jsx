@@ -9,7 +9,7 @@ import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import logo from '../images/navlogo.png';
+import logo from '../images/logo1.jpg';
 import { useNavigate } from 'react-router-dom';
 import Auth from '../utils/auth';
 import { BottomNavigation, BottomNavigationAction } from '@mui/material';
