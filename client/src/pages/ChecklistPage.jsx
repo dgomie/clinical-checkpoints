@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Auth from "../utils/auth";
-import SettingsComponent from '../components/SettingsComponent';
+import ChecklistComponent from '../components/ChecklistComponent';
 
-const SettingsPage = () => {
+const ChecklistPage = () => {
     const navigate = useNavigate();
     const [isLoggedIn, setIsLoggedIn] = useState(Auth.loggedIn());
 
@@ -20,8 +20,8 @@ const SettingsPage = () => {
     }
 
     return (
-        <SettingsComponent />
+        <ChecklistComponent />
     );
 };
 
-export default SettingsPage;
+export default ChecklistPage;
