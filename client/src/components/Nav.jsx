@@ -51,13 +51,13 @@ function Nav() {
   const settings = ['about', 'settings', 'logout'];
 
   return (
-    <AppBar position="static" sx={{ mb: 3 }}>
+    <AppBar position="static" color="default" sx={{ mb: 3, backgroundColor: 'white' }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Button onClick={() => navigate('/')}>
             <img src={logo} width="150px" alt="" />
           </Button>
-
+  
           <Box
             sx={{
               flexGrow: 1,
@@ -77,7 +77,7 @@ function Nav() {
                     navigate(`/${page.replace(/\s+/g, '')}`);
                   }
                 }}
-                sx={{ my: 2, color: 'white', display: 'block'}}
+                sx={{ my: 2, color: 'black', display: 'block' }}
               >
                 {page}
               </Button>
