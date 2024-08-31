@@ -1,4 +1,4 @@
-import { Container } from "@mui/material";
+import { Container, Paper, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Auth from "../utils/auth";
 import { useEffect, useState } from "react";
@@ -23,8 +23,16 @@ const DashboardComponent = () => {
 
 
   return (
-    <Container sx={{ paddingBottom: '50px', display: "flex", justifyContent: 'center', alignItems: 'center'  }}>
-      Welcome, {userFirstName}
+    <Container >
+        <Paper
+          elevation={3}
+
+          sx={{ marginBottom: 2, padding: { xs: 2, sm: 4, md: 6 } }}
+        >
+          <Typography variant="h4" component="header">
+            Welcome {userFirstName}
+          </Typography>
+        </Paper>
     </Container>
   );
 };
