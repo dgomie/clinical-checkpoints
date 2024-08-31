@@ -8,6 +8,7 @@ import SignUpPage from './pages/signUpPage.jsx';
 import ErrorPage from './pages/ErrorPage.jsx';
 import SettingsPage from './pages/SettingsPage.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
+import ChecklistPage from './pages/ChecklistPage.jsx';
 
 
 const router = createBrowserRouter([
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
       {
         path: 'dashboard',
         element: <DashboardPage />,
+      },
+      {
+        path: 'checklist',
+        element: <ChecklistPage />,
       },
     ],
   },
