@@ -3,18 +3,16 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
 import logo from '../images/logo1.jpg';
 import { useNavigate } from 'react-router-dom';
 import Auth from '../utils/auth';
 import { BottomNavigation, BottomNavigationAction } from '@mui/material';
-import SettingsIcon from '@mui/icons-material/Settings';
-import LibraryMusicRoundedIcon from '@mui/icons-material/LibraryMusicRounded';
+import LogoutIcon from '@mui/icons-material/Logout';
+
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import PersonIcon from '@mui/icons-material/Person';
 
@@ -25,39 +23,23 @@ function Nav() {
   const username = user ? user.data.username : '';
 
   const [value, setValue] = React.useState(0);
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
 
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
-
-  const toTitleCase = (str) => {
-    return str.replace(
-      /\w\S*/g,
-      (text) => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
-    );
-  };
-
-  const pages = isLoggedIn ? ['dashboard', 'legions', 'profile'] : ['login'];
-  const settings = ['about', 'settings', 'logout'];
+  const pages = isLoggedIn
+    ? ['dashboard', 'check lists', 'settings']
+    : ['login'];
 
   return (
-    <AppBar position="static" color="default" sx={{ mb: 3, backgroundColor: 'white' }}>
+    <AppBar
+      position="static"
+      color="default"
+      sx={{ mb: 3, backgroundColor: 'white' }}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Button onClick={() => navigate('/')}>
             <img src={logo} width="150px" alt="" />
           </Button>
-  
+
           <Box
             sx={{
               flexGrow: 1,
@@ -91,48 +73,11 @@ function Nav() {
                 flexGrow: { xs: 1 },
               }}
             >
-              <Tooltip title="Open settings">
-                <IconButton
-                  onClick={handleOpenUserMenu}
-                  sx={{ p: 0, marginLeft: 2 }}
-                >
-                  <SettingsIcon />
+              <Tooltip title="Logout">
+                <IconButton onClick={Auth.logout} sx={{ p: 0, marginLeft: 2 }}>
+                  <LogoutIcon />
                 </IconButton>
               </Tooltip>
-              <Menu
-                sx={{ mt: '45px' }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                {settings.map((setting) => (
-                  <MenuItem
-                    key={setting}
-                    onClick={() => {
-                      handleCloseUserMenu();
-                      if (setting === 'logout') {
-                        Auth.logout();
-                      } else {
-                        navigate(`/${setting}`);
-                      }
-                    }}
-                  >
-                    <Typography textAlign="center">
-                      {toTitleCase(setting)}
-                    </Typography>
-                  </MenuItem>
-                ))}
-              </Menu>
             </Box>
           )}
         </Toolbar>
@@ -163,7 +108,7 @@ function Nav() {
                 index === 0 ? (
                   <HomeRoundedIcon />
                 ) : index === 1 ? (
-                  <LibraryMusicRoundedIcon />
+                  <AssignmentTurnedInIcon />
                 ) : (
                   <PersonIcon />
                 )
