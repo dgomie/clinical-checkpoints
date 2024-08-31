@@ -23,10 +23,14 @@ function Nav() {
   const username = user ? user.data.username : '';
 
   const [value, setValue] = React.useState(0);
+  const [anchorElNav, setAnchorElNav] = React.useState(null);
+  const [anchorElUser, setAnchorElUser] = React.useState(null);
 
-  const pages = isLoggedIn
-    ? ['dashboard', 'check lists', 'settings']
-    : ['login'];
+  const handleCloseNavMenu = () => {
+    setAnchorElNav(null);
+  };
+
+  const pages = isLoggedIn ? ['dashboard', 'check lists', 'settings'] : ['login'];
 
   return (
     <AppBar
