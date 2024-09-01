@@ -19,25 +19,51 @@ import { useMutation } from '@apollo/client';
 import { ADD_USER } from '../utils/mutations';
 import Auth from '../utils/auth';
 
-
 const defaultTheme = createTheme();
 
 const Signup = () => {
   const [addUser] = useMutation(ADD_USER);
   const [showPassword, setShowPassword] = useState(false);
-  // const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-
   const [officeLocation, setOfficeLocation] = useState('');
   const [officeLocationError, setOfficeLocationError] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
 
   const handleOfficeLocationChange = (event) => {
     setOfficeLocation(event.target.value);
   };
 
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
+  };
+
+  const handleConfirmPasswordChange = (event) => {
+    setConfirmPassword(event.target.value);
+  };
+
   const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleClickShowConfirmPassword = () => setShowPassword((show) => !show);
+
+  const validatePassword = (password) => {
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/;
+    return passwordRegex.test(password);
+  };
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
+
+    if (password !== confirmPassword) {
+      setPasswordError('Passwords do not match');
+      return;
+    }
+
+    if (!validatePassword(password)) {
+      setPasswordError(
+        'Password must be at least 8 characters long and include at least one capital letter, one special character, and one number.'
+      );
+      return;
+    }
 
     const userData = {
       firstName: event.target.firstName.value,
@@ -145,7 +171,6 @@ const Signup = () => {
                       value={officeLocation}
                       onChange={handleOfficeLocationChange}
                       label="Office Location"
-                      error={Boolean(officeLocationError)}
                     >
                       <MenuItem value="Bristol">Bristol</MenuItem>
                       <MenuItem value="Burlington">Burlington</MenuItem>
@@ -161,7 +186,6 @@ const Signup = () => {
                   </FormControl>
                 </Grid>
 
-               
                 <Grid item xs={12}>
                   <TextField
                     required
@@ -171,6 +195,7 @@ const Signup = () => {
                     type={showPassword ? 'text' : 'password'}
                     id="password"
                     autoComplete="new-password"
+                    onChange={handlePasswordChange}
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
@@ -187,6 +212,37 @@ const Signup = () => {
                     }}
                   />
                 </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    name="confirmPassword"
+                    label="Confirm Password"
+                    type={showPassword ? 'text' : 'password'}
+                    id="confirmPassword"
+                    autoComplete="new-password"
+                    onChange={handleConfirmPasswordChange}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowConfirmPassword}
+                            edge="end"
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                      style: { backgroundColor: 'white' },
+                    }}
+                  />
+                </Grid>
+                {passwordError && (
+                  <Grid item xs={12}>
+                    <Typography color="error">{passwordError}</Typography>
+                  </Grid>
+                )}
               </Grid>
               <Button
                 type="submit"

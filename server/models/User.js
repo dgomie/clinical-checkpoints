@@ -28,9 +28,6 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    profilePicture: {
-      type: String,
-    },
     createdAt: {
       type: Date,
       required: true,
