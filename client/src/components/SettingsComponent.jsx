@@ -18,11 +18,12 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  Alert,
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useMutation, useQuery } from '@apollo/client';
 import { REMOVE_USER, UPDATE_USER } from '../utils/mutations';
-import { GET_USER_BY_ID } from '../utils/queries'; // Updated import
+import { GET_USER_BY_ID } from '../utils/queries';
 import Auth from '../utils/auth';
 
 const SettingsComponent = () => {
@@ -35,8 +36,12 @@ const SettingsComponent = () => {
   const [userId, setUserId] = useState('');
   const [officeLocation, setOfficeLocation] = useState('');
   const [officeLocationError, setOfficeLocationError] = useState('');
-  const [updateSuccess, setUpdateSuccess] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const [profileMessage, setProfileMessage] = useState('');
+  const [profileMessageSeverity, setProfileMessageSeverity] = useState('success');
+  const [passwordMessage, setPasswordMessage] = useState('');
+  const [passwordMessageSeverity, setPasswordMessageSeverity] = useState('success');
 
   const [removeUserMutation] = useMutation(REMOVE_USER);
   const [updateUser] = useMutation(UPDATE_USER);
@@ -57,6 +62,24 @@ const SettingsComponent = () => {
       setOfficeLocation(data.userById.officeLocation);
     }
   }, [data]);
+
+  useEffect(() => {
+    if (profileMessage) {
+      const timer = setTimeout(() => {
+        setProfileMessage('');
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [profileMessage]);
+
+  useEffect(() => {
+    if (passwordMessage) {
+      const timer = setTimeout(() => {
+        setPasswordMessage('');
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [passwordMessage]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>An error occurred: {error.message}</p>;
@@ -100,7 +123,8 @@ const SettingsComponent = () => {
     const updateEndpoint = `${hostUrl}${updateUrl}`;
 
     if (newPassword !== confirmPassword) {
-      alert('New password and confirm password do not match');
+      setPasswordMessage('New password and confirm password do not match');
+      setPasswordMessageSeverity('error');
       return;
     }
 
@@ -116,7 +140,8 @@ const SettingsComponent = () => {
 
       if (!verifyResponse.ok) {
         const errorData = await verifyResponse.json();
-        alert(errorData.message);
+        setPasswordMessage(errorData.message);
+        setPasswordMessageSeverity('error');
         return;
       }
 
@@ -130,16 +155,20 @@ const SettingsComponent = () => {
       });
 
       if (updateResponse.ok) {
-        alert('Password updated successfully');
+        setPasswordMessage('Password updated successfully');
+        setPasswordMessageSeverity('success');
         currentPasswordInput.value = '';
         newPasswordInput.value = '';
         confirmPasswordInput.value = '';
       } else {
         const errorData = await updateResponse.json();
-        alert(errorData.message);
+        setPasswordMessage(errorData.message);
+        setPasswordMessageSeverity('error');
       }
     } catch (error) {
       console.error('Error updating password:', error);
+      setPasswordMessage('Error updating password');
+      setPasswordMessageSeverity('error');
     }
   };
 
@@ -148,16 +177,18 @@ const SettingsComponent = () => {
       firstName,
       lastName,
       email,
-      officeLocation
+      officeLocation,
     };
     try {
       await updateUser({
         variables: { userId, updateData },
       });
-      setUpdateSuccess(true);
-      setTimeout(() => setUpdateSuccess(false), 5000);
+      setProfileMessage('Profile updated successfully');
+      setProfileMessageSeverity('success');
     } catch (error) {
       console.log('Error details:', error);
+      setProfileMessage('Error updating profile');
+      setProfileMessageSeverity('error');
     }
   };
 
@@ -261,11 +292,11 @@ const SettingsComponent = () => {
                 >
                   Update Profile
                 </Button>
-                <div>
-                  {updateSuccess && (
-                    <div className="mt-1">Profile updated successfully!</div>
-                  )}
-                </div>
+                {profileMessage && (
+                  <Alert severity={profileMessageSeverity} sx={{ mt: 2 }}>
+                    {profileMessage}
+                  </Alert>
+                )}
               </Box>
             </Box>
           </Box>
@@ -352,6 +383,11 @@ const SettingsComponent = () => {
             >
               Update Password
             </Button>
+            {passwordMessage && (
+              <Alert severity={passwordMessageSeverity} sx={{ mt: 2 }}>
+                {passwordMessage}
+              </Alert>
+            )}
           </Box>
         </Paper>
 
