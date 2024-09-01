@@ -147,9 +147,6 @@ const Signup = () => {
                       label="Office Location"
                       error={Boolean(officeLocationError)}
                     >
-                      <MenuItem value="">
-                        <em>None</em>
-                      </MenuItem>
                       <MenuItem value="Bristol">Bristol</MenuItem>
                       <MenuItem value="Burlington">Burlington</MenuItem>
                       <MenuItem value="Farmington">Farmington</MenuItem>
