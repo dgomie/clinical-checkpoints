@@ -1,6 +1,17 @@
+require('dotenv').config(); 
 const { User, CheckPoint } = require('../models');
 const { signToken, AuthenticationError } = require('../utils/auth');
 const mongoose = require('mongoose');
+const nodemailer = require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.GMAIL_UN,
+    pass: process.env.GMAIL_PW
+  },
+});
+
 
 const resolvers = {
   Query: {
@@ -75,7 +86,48 @@ const resolvers = {
       const checkPoint = await CheckPoint.create(input);
       return checkPoint;
     },
+    
+    updateCheckPoint: async (parent, { checkPointId, updateData }) => {
+      // Find the checkpoint by ID
+      const checkPoint = await CheckPoint.findById(checkPointId);
+      if (!checkPoint) {
+        throw new Error('CheckPoint not found.');
+      }
 
+      // Update the checkpoint with the provided data
+      Object.assign(checkPoint, updateData);
+
+      // Check if all tasks are completed
+      if (checkPoint.tasks.every(task => task.taskCompleted)) {
+        checkPoint.checkpointCompleted = true;
+        checkPoint.completedAt = new Date();
+
+        // Fetch admin users (assuming you have a User model and admin users have a role field)
+        const adminUsers = await User.find({ isAdmin: true });
+
+        // Send email to each admin user
+        adminUsers.forEach(admin => {
+          const mailOptions = {
+            from: process.env.GMAIL_UN,
+            to: admin.email,
+            subject: 'Checkpoint Completed',
+            text: `All tasks in the checkpoint with focus area "${checkPoint.focusArea}" have been completed.`,
+          };
+
+          transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+              console.error('Error sending email:', error);
+            } else {
+              console.log('Email sent:', info.response);
+            }
+          });
+        });
+      }
+
+      // Save the updated checkpoint
+      await checkPoint.save();
+      return checkPoint;
+    },
   },
 };
 

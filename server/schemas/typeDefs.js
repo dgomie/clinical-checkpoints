@@ -16,7 +16,7 @@ const typeDefs = `
 
   type Task {
     description: String
-    isCompleted: Boolean
+    taskCompleted: Boolean!
   }
 
   type CheckPoint {
@@ -26,8 +26,8 @@ const typeDefs = `
     tasks: [Task]
     createdAt: String
     completedAt: String
+    checkpointCompleted: Boolean!
   }
-
 
   type Query {
     users: [User]
@@ -54,7 +54,7 @@ const typeDefs = `
 
   input NewTaskInput {
     description: String
-    isCompleted: Boolean
+    taskCompleted: Boolean
   }
 
   input NewCheckPointInput {
@@ -63,6 +63,11 @@ const typeDefs = `
     tasks: [NewTaskInput]
   }
 
+  input UpdateCheckPointInput {
+    focusArea: String
+    tasks: [NewTaskInput]
+    completedAt: String
+  }
 
   type Mutation {
     addUser(userData: NewUserInput!): Auth
@@ -70,6 +75,7 @@ const typeDefs = `
     removeUser(userId: ID!): User
     updateUser(userId: ID!, updateData: UpdateUserInput!): User
     addCheckPoint(input: NewCheckPointInput!): CheckPoint
+    updateCheckPoint(checkPointId: ID!, updateData: UpdateCheckPointInput!): CheckPoint
   }
 `;
 
