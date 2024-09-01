@@ -19,8 +19,6 @@ import PersonIcon from '@mui/icons-material/Person';
 function Nav() {
   const navigate = useNavigate();
   const isLoggedIn = Auth.loggedIn();
-  const user = isLoggedIn ? Auth.getProfile() : null;
-  const userId = user ? user.data._id : '';
 
   const [value, setValue] = React.useState(0);
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -96,11 +94,8 @@ function Nav() {
           value={value}
           onChange={(event, newValue) => {
             setValue(newValue);
-            if (pages[newValue] === 'profile') {
-              navigate(`/profile/${username}`);
-            } else {
-              navigate(`/${pages[newValue].replace(/\s+/g, '')}`);
-            }
+
+            navigate(`/${pages[newValue].replace(/\s+/g, '')}`);
           }}
         >
           {pages.map((page, index) => (
