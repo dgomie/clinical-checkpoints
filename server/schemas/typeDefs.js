@@ -5,6 +5,7 @@ const typeDefs = `
     lastName: String!
     email: String!
     officeLocation: String!
+    isAdmin: Boolean!
     formattedCreatedAt: String
   }
 
