@@ -30,7 +30,7 @@ const userSchema = new Schema(
       required: true,
       minlength: 5,
     },
-    dateOfBirth: {
+    officeLocation: {
       type: String,
       required: true,
     },

@@ -5,8 +5,7 @@ const typeDefs = `
     lastName: String!
     username: String!
     email: String!
-    age: Int
-    profilePicture: String
+    officeLocation: String!
     formattedCreatedAt: String
   }
 
@@ -15,7 +14,7 @@ const typeDefs = `
     user: User
   }
 
-    type Task {
+  type Task {
     description: String
     isCompleted: Boolean
   }
@@ -44,7 +43,7 @@ const typeDefs = `
     lastName: String!
     password: String!
     email: String!
-    dateOfBirth: String!
+    officeLocation: String!
   }
 
   input UpdateUserInput {
@@ -52,8 +51,7 @@ const typeDefs = `
     firstName: String
     lastName: String
     email: String
-    dateOfBirth: String
-    profilePicture: String
+    officeLocation: String
   }
 
   input NewTaskInput {

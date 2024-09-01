@@ -33,7 +33,7 @@ const resolvers = {
         firstName: userData.firstName,
         lastName: userData.lastName,
         email: userData.email,
-        dateOfBirth: userData.dateOfBirth,
+        officeLocation: userData.officeLocation,
       });
       const token = signToken(newUser);
       return { token, user: newUser };
