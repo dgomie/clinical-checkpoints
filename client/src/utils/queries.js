@@ -13,7 +13,6 @@ export const GET_USER = gql`
   query user($username: String!) {
     user(username: $username) {
       _id
-      username
       email
       firstName
       lastName
@@ -27,7 +26,6 @@ export const GET_USER_BY_ID = gql`
   query userByIdId($id: ID!) {
     userById(id: $id) {
       _id
-      username
       email
       firstName
       lastName
