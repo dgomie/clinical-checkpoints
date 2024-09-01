@@ -7,7 +7,7 @@ import { LOGIN_USER } from '../utils/mutations';
 import Auth from '../utils/auth';
 
 function LoginComponent() {
-  const [formState, setFormState] = useState({ username: '', password: '' });
+  const [formState, setFormState] = useState({ email: '', password: '' });
   const [errorMessage, setErrorMessage] = useState('');
   const [login] = useMutation(LOGIN_USER);
 
@@ -30,12 +30,12 @@ function LoginComponent() {
       Auth.login(data.login.token);
     } catch (e) {
       console.error(e);
-      setErrorMessage('Incorrect username or password!');
+      setErrorMessage('Incorrect email or password!');
     }
 
     // clear form values
     setFormState({
-      username: '',
+      email: '',
       password: '',
     });
   };
@@ -73,11 +73,11 @@ function LoginComponent() {
           Login
         </Typography>
         <TextField
-          label="Username"
+          label="Email"
           variant="outlined"
-          id="username"
-          name="username"
-          value={formState.username}
+          id="email"
+          name="email"
+          value={formState.email}
           onChange={handleChange}
           required
           InputProps={{

@@ -14,11 +14,16 @@ import {
   DialogTitle,
   IconButton,
   InputAdornment,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Alert,
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useMutation, useQuery } from '@apollo/client';
 import { REMOVE_USER, UPDATE_USER } from '../utils/mutations';
-import { GET_USER } from '../utils/queries';
+import { GET_USER_BY_ID } from '../utils/queries';
 import Auth from '../utils/auth';
 
 const SettingsComponent = () => {
@@ -29,28 +34,52 @@ const SettingsComponent = () => {
   const [lastName, setLastName] = useState('Last Name');
   const [email, setEmail] = useState('Email');
   const [userId, setUserId] = useState('');
-  const [updateSuccess, setUpdateSuccess] = useState(false);
-
+  const [officeLocation, setOfficeLocation] = useState('');
+  const [officeLocationError, setOfficeLocationError] = useState('');
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const [profileMessage, setProfileMessage] = useState('');
+  const [profileMessageSeverity, setProfileMessageSeverity] = useState('success');
+  const [passwordMessage, setPasswordMessage] = useState('');
+  const [passwordMessageSeverity, setPasswordMessageSeverity] = useState('success');
 
   const [removeUserMutation] = useMutation(REMOVE_USER);
   const [updateUser] = useMutation(UPDATE_USER);
 
   const token = Auth.getToken();
-  const { username } = Auth.getProfile(token).data;
+  const { _id } = Auth.getProfile(token).data;
 
-  const { loading, error, data } = useQuery(GET_USER, {
-    variables: { username },
+  const { loading, error, data } = useQuery(GET_USER_BY_ID, {
+    variables: { id: _id },
   });
 
   useEffect(() => {
     if (data) {
-      setFirstName(data.user.firstName);
-      setLastName(data.user.lastName);
-      setEmail(data.user.email);
-      setUserId(data.user._id);
+      setFirstName(data.userById.firstName);
+      setLastName(data.userById.lastName);
+      setEmail(data.userById.email);
+      setUserId(data.userById._id);
+      setOfficeLocation(data.userById.officeLocation);
     }
   }, [data]);
+
+  useEffect(() => {
+    if (profileMessage) {
+      const timer = setTimeout(() => {
+        setProfileMessage('');
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [profileMessage]);
+
+  useEffect(() => {
+    if (passwordMessage) {
+      const timer = setTimeout(() => {
+        setPasswordMessage('');
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [passwordMessage]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>An error occurred: {error.message}</p>;
@@ -63,6 +92,10 @@ const SettingsComponent = () => {
     setOpen(false);
   };
 
+  const handleOfficeLocationChange = (event) => {
+    setOfficeLocation(event.target.value);
+  };
+
   const handleDelete = () => {
     removeUserMutation({ variables: { userId } })
       .then(() => {
@@ -73,7 +106,6 @@ const SettingsComponent = () => {
       });
   };
 
-  // create check password function on backend. call the function if passwords match and new password matches confirmation, update user password
   const handlePasswordUpdate = async () => {
     const currentPasswordInput = document.getElementById('current-password');
     const newPasswordInput = document.getElementById('new-password');
@@ -88,11 +120,11 @@ const SettingsComponent = () => {
     const verifyEndpoint = `${hostUrl}${verifyUrl}`;
 
     const updateUrl = import.meta.env.VITE_UPDATE_ENDPOINT_URL;
-    const updateEndpoint = `${hostUrl}${updateUrl}`
-
+    const updateEndpoint = `${hostUrl}${updateUrl}`;
 
     if (newPassword !== confirmPassword) {
-      alert('New password and confirm password do not match');
+      setPasswordMessage('New password and confirm password do not match');
+      setPasswordMessageSeverity('error');
       return;
     }
 
@@ -101,40 +133,42 @@ const SettingsComponent = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ userId, currentPassword }),
-
       });
+
       if (!verifyResponse.ok) {
         const errorData = await verifyResponse.json();
-        alert(errorData.message);
+        setPasswordMessage(errorData.message);
+        setPasswordMessageSeverity('error');
         return;
       }
 
-      // Update password
       const updateResponse = await fetch(updateEndpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-           Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ userId, newPassword }),
       });
 
       if (updateResponse.ok) {
-        alert('Password updated successfully');
+        setPasswordMessage('Password updated successfully');
+        setPasswordMessageSeverity('success');
         currentPasswordInput.value = '';
         newPasswordInput.value = '';
         confirmPasswordInput.value = '';
-
-        
       } else {
         const errorData = await updateResponse.json();
-        alert(errorData.message);
+        setPasswordMessage(errorData.message);
+        setPasswordMessageSeverity('error');
       }
     } catch (error) {
       console.error('Error updating password:', error);
+      setPasswordMessage('Error updating password');
+      setPasswordMessageSeverity('error');
     }
   };
 
@@ -143,15 +177,18 @@ const SettingsComponent = () => {
       firstName,
       lastName,
       email,
+      officeLocation,
     };
     try {
       await updateUser({
         variables: { userId, updateData },
       });
-      setUpdateSuccess(true);
-      setTimeout(() => setUpdateSuccess(false), 5000);
+      setProfileMessage('Profile updated successfully');
+      setProfileMessageSeverity('success');
     } catch (error) {
       console.log('Error details:', error);
+      setProfileMessage('Error updating profile');
+      setProfileMessageSeverity('error');
     }
   };
 
@@ -173,7 +210,6 @@ const SettingsComponent = () => {
       <Container maxWidth="md">
         <Paper
           elevation={3}
-
           sx={{ marginBottom: 2, padding: { xs: 2, sm: 4, md: 6 } }}
         >
           <Typography variant="h4" component="header">
@@ -189,9 +225,6 @@ const SettingsComponent = () => {
               <Typography variant="h5" component="h2" gutterBottom>
                 Profile Information
               </Typography>
-              
-        
-
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                   <TextField
@@ -220,6 +253,33 @@ const SettingsComponent = () => {
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </Grid>
+                <Grid item xs={12}>
+                  <FormControl fullWidth required>
+                    <InputLabel id="officeLocation-label">
+                      Office Location
+                    </InputLabel>
+                    <Select
+                      labelId="officeLocation-label"
+                      id="officeLocation"
+                      name="officeLocation"
+                      value={officeLocation}
+                      onChange={handleOfficeLocationChange}
+                      label="Office Location"
+                      error={Boolean(officeLocationError)}
+                    >
+                      <MenuItem value="Bristol">Bristol</MenuItem>
+                      <MenuItem value="Burlington">Burlington</MenuItem>
+                      <MenuItem value="Farmington">Farmington</MenuItem>
+                      <MenuItem value="Prospect">Prospect</MenuItem>
+                      <MenuItem value="Terryville">Terryville</MenuItem>
+                      <MenuItem value="Torrington">Torrington</MenuItem>
+                      <MenuItem value="Wolcott">Wolcott</MenuItem>
+                    </Select>
+                    {officeLocationError && (
+                      <p style={{ color: 'red' }}>{officeLocationError}</p>
+                    )}
+                  </FormControl>
+                </Grid>
               </Grid>
               <Box mt={2}>
                 <Button
@@ -229,11 +289,11 @@ const SettingsComponent = () => {
                 >
                   Update Profile
                 </Button>
-                <div>
-                  {updateSuccess && (
-                    <div className="mt-1">Profile updated successfully!</div>
-                  )}
-                </div>
+                {profileMessage && (
+                  <Alert severity={profileMessageSeverity} sx={{ mt: 2 }}>
+                    {profileMessage}
+                  </Alert>
+                )}
               </Box>
             </Box>
           </Box>
@@ -243,11 +303,10 @@ const SettingsComponent = () => {
           elevation={3}
           sx={{ marginBottom: 2, padding: { xs: 2, sm: 4, md: 6 } }}
         >
-             <Typography variant="h5" component="h2" gutterBottom>
-              Change Password
-        
-            </Typography>
-          <Grid item xs={12} sx={{ marginBottom: 2}}>
+          <Typography variant="h5" component="h2" gutterBottom>
+            Change Password
+          </Typography>
+          <Grid item xs={12} sx={{ marginBottom: 2 }}>
             <TextField
               fullWidth
               id="current-password"
@@ -269,7 +328,7 @@ const SettingsComponent = () => {
               }}
             />
           </Grid>
-          <Grid item xs={12} sm={6} sx={{ marginBottom: 2}}>
+          <Grid item xs={12} sm={6} sx={{ marginBottom: 2 }}>
             <TextField
               fullWidth
               id="new-password"
@@ -291,7 +350,7 @@ const SettingsComponent = () => {
               }}
             />
           </Grid>
-          <Grid item xs={12} sm={6} sx={{ marginBottom: 2}}>
+          <Grid item xs={12} sm={6} sx={{ marginBottom: 2 }}>
             <TextField
               fullWidth
               id="confirm-password"
@@ -314,9 +373,18 @@ const SettingsComponent = () => {
             />
           </Grid>
           <Box mt={2}>
-            <Button variant="contained" color="primary" onClick={handlePasswordUpdate} >
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handlePasswordUpdate}
+            >
               Update Password
             </Button>
+            {passwordMessage && (
+              <Alert severity={passwordMessageSeverity} sx={{ mt: 2 }}>
+                {passwordMessage}
+              </Alert>
+            )}
           </Box>
         </Paper>
 

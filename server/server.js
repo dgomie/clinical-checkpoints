@@ -40,37 +40,6 @@ const startApolloServer = async () => {
   app.use(cors());
 
 
-  app.post('/upload', async(req, res) => {
-    const { avatarUrl, userId } = req.body; 
-
-    try{
-      const updatedUser = await User.findByIdAndUpdate(userId, { profilePicture: avatarUrl }, { new: true });
-      if (!updatedUser) {
-        return res.status(404).send({ message: 'User not found' });
-      }
-
-      res.status(200).send(updatedUser);
-    } catch (error) {
-      res.status(500).send({ message: 'Error updating user profile picture', error: error.message });
-    }
-  });
-
-  app.get('/profileImage/:id', async (req, res) => {
-    const { id } = req.params; // id is now the avatarUrl passed in the URL
-  
-    try {
-      const user = await User.findOne({ _id: id });
-      if (!user) {
-        return res.status(404).json({ status: 'error', message: 'User not found' });
-      }
-  
-      res.status(200).json({ status: 'ok', data: user });
-    } catch (err) {
-      console.error('Error fetching user:', err);
-      res.status(500).json({ status: 'error', message: err.message });
-    }
-  });
-
   app.post('/verify-password', verifyJWT, async (req, res) => {
     const { userId, currentPassword } = req.body;
   

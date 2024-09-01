@@ -3,21 +3,17 @@ const bcrypt = require("bcrypt");
 
 const userSchema = new Schema(
   {
-    username: {
-      type: String,
-      required: true,
-      unique: true,
-      trim: true,
-    },
     firstName: {
       type: String,
       required: true,
       trim: true,
+      minlength: 2,
     },
     lastName: {
       type: String,
       required: true,
       trim: true,
+      minlength: 2,
     },
     email: {
       type: String,
@@ -30,12 +26,9 @@ const userSchema = new Schema(
       required: true,
       minlength: 5,
     },
-    dateOfBirth: {
+    officeLocation: {
       type: String,
       required: true,
-    },
-    profilePicture: {
-      type: String,
     },
     createdAt: {
       type: Date,

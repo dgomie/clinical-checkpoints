@@ -19,8 +19,6 @@ import PersonIcon from '@mui/icons-material/Person';
 function Nav() {
   const navigate = useNavigate();
   const isLoggedIn = Auth.loggedIn();
-  const user = isLoggedIn ? Auth.getProfile() : null;
-  const username = user ? user.data.username : '';
 
   const [value, setValue] = React.useState(0);
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -30,7 +28,9 @@ function Nav() {
     setAnchorElNav(null);
   };
 
-  const pages = isLoggedIn ? ['dashboard', 'check lists', 'settings'] : ['login'];
+  const pages = isLoggedIn
+    ? ['dashboard', 'check lists', 'settings']
+    : ['login'];
 
   return (
     <AppBar
@@ -57,11 +57,7 @@ function Nav() {
                 key={page}
                 onClick={() => {
                   handleCloseNavMenu();
-                  if (page === 'profile') {
-                    navigate(`/profile/${username}`);
-                  } else {
-                    navigate(`/${page.replace(/\s+/g, '')}`);
-                  }
+                  navigate(`/${page.replace(/\s+/g, '')}`);
                 }}
                 sx={{ my: 2, color: 'black', display: 'block' }}
               >
@@ -98,11 +94,8 @@ function Nav() {
           value={value}
           onChange={(event, newValue) => {
             setValue(newValue);
-            if (pages[newValue] === 'profile') {
-              navigate(`/profile/${username}`);
-            } else {
-              navigate(`/${pages[newValue].replace(/\s+/g, '')}`);
-            }
+
+            navigate(`/${pages[newValue].replace(/\s+/g, '')}`);
           }}
         >
           {pages.map((page, index) => (

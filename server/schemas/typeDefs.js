@@ -3,10 +3,8 @@ const typeDefs = `
     _id: ID!
     firstName: String!
     lastName: String!
-    username: String!
     email: String!
-    age: Int
-    profilePicture: String
+    officeLocation: String!
     formattedCreatedAt: String
   }
 
@@ -15,7 +13,7 @@ const typeDefs = `
     user: User
   }
 
-    type Task {
+  type Task {
     description: String
     isCompleted: Boolean
   }
@@ -32,28 +30,25 @@ const typeDefs = `
 
   type Query {
     users: [User]
-    user(username: String!): User
+    user(email: String!): User
     userById(id: ID!): User
     checkPoints: [CheckPoint]
     checkPoint(id: ID!): CheckPoint
   }
 
   input NewUserInput {
-    username: String!
     firstName: String!
     lastName: String!
     password: String!
     email: String!
-    dateOfBirth: String!
+    officeLocation: String!
   }
 
   input UpdateUserInput {
-    username: String
     firstName: String
     lastName: String
     email: String
-    dateOfBirth: String
-    profilePicture: String
+    officeLocation: String
   }
 
   input NewTaskInput {
@@ -70,7 +65,7 @@ const typeDefs = `
 
   type Mutation {
     addUser(userData: NewUserInput!): Auth
-    login(username: String!, password: String!): Auth
+    login(email: String!, password: String!): Auth
     removeUser(userId: ID!): User
     updateUser(userId: ID!, updateData: UpdateUserInput!): User
     addCheckPoint(input: NewCheckPointInput!): CheckPoint
