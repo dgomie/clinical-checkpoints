@@ -32,7 +32,6 @@ const Signup = () => {
 
   const handleOfficeLocationChange = (event) => {
     setOfficeLocation(event.target.value);
-    // Add any validation logic here if needed
   };
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -41,7 +40,6 @@ const Signup = () => {
     event.preventDefault();
 
     const userData = {
-      username: event.target.username.value,
       firstName: event.target.firstName.value,
       lastName: event.target.lastName.value,
       email: event.target.email.value,
@@ -126,10 +124,10 @@ const Signup = () => {
                   <TextField
                     required
                     fullWidth
-                    id="username"
-                    label="Username"
-                    name="username"
-                    autoComplete="username"
+                    id="email"
+                    label="Email Address"
+                    name="email"
+                    autoComplete="email"
                     InputProps={{
                       style: { backgroundColor: 'white' },
                     }}
@@ -152,11 +150,13 @@ const Signup = () => {
                       <MenuItem value="">
                         <em>None</em>
                       </MenuItem>
-                      <MenuItem value="New York">New York</MenuItem>
-                      <MenuItem value="San Francisco">San Francisco</MenuItem>
-                      <MenuItem value="Chicago">Chicago</MenuItem>
-                      <MenuItem value="Los Angeles">Los Angeles</MenuItem>
-                      <MenuItem value="Austin">Austin</MenuItem>
+                      <MenuItem value="Bristol">Bristol</MenuItem>
+                      <MenuItem value="Burlington">Burlington</MenuItem>
+                      <MenuItem value="Farmington">Farmington</MenuItem>
+                      <MenuItem value="Prospect">Prospect</MenuItem>
+                      <MenuItem value="Terryville">Terryville</MenuItem>
+                      <MenuItem value="Torrington">Torrington</MenuItem>
+                      <MenuItem value="Wolcott">Wolcott</MenuItem>
                     </Select>
                     {officeLocationError && (
                       <p style={{ color: 'red' }}>{officeLocationError}</p>
@@ -164,19 +164,7 @@ const Signup = () => {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12}>
-                  <TextField
-                    required
-                    fullWidth
-                    id="email"
-                    label="Email Address"
-                    name="email"
-                    autoComplete="email"
-                    InputProps={{
-                      style: { backgroundColor: 'white' },
-                    }}
-                  />
-                </Grid>
+               
                 <Grid item xs={12}>
                   <TextField
                     required
