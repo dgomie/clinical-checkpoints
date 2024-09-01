@@ -20,7 +20,7 @@ function Nav() {
   const navigate = useNavigate();
   const isLoggedIn = Auth.loggedIn();
   const user = isLoggedIn ? Auth.getProfile() : null;
-  const username = user ? user.data.username : '';
+  const userId = user ? user.data._id : '';
 
   const [value, setValue] = React.useState(0);
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -30,7 +30,9 @@ function Nav() {
     setAnchorElNav(null);
   };
 
-  const pages = isLoggedIn ? ['dashboard', 'check lists', 'settings'] : ['login'];
+  const pages = isLoggedIn
+    ? ['dashboard', 'check lists', 'settings']
+    : ['login'];
 
   return (
     <AppBar
@@ -57,11 +59,7 @@ function Nav() {
                 key={page}
                 onClick={() => {
                   handleCloseNavMenu();
-                  if (page === 'profile') {
-                    navigate(`/profile/${username}`);
-                  } else {
-                    navigate(`/${page.replace(/\s+/g, '')}`);
-                  }
+                  navigate(`/${page.replace(/\s+/g, '')}`);
                 }}
                 sx={{ my: 2, color: 'black', display: 'block' }}
               >

@@ -14,11 +14,15 @@ import {
   DialogTitle,
   IconButton,
   InputAdornment,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useMutation, useQuery } from '@apollo/client';
 import { REMOVE_USER, UPDATE_USER } from '../utils/mutations';
-import { GET_USER } from '../utils/queries';
+import { GET_USER_BY_ID } from '../utils/queries'; // Updated import
 import Auth from '../utils/auth';
 
 const SettingsComponent = () => {
@@ -29,26 +33,28 @@ const SettingsComponent = () => {
   const [lastName, setLastName] = useState('Last Name');
   const [email, setEmail] = useState('Email');
   const [userId, setUserId] = useState('');
+  const [officeLocation, setOfficeLocation] = useState('');
+  const [officeLocationError, setOfficeLocationError] = useState('');
   const [updateSuccess, setUpdateSuccess] = useState(false);
-
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [removeUserMutation] = useMutation(REMOVE_USER);
   const [updateUser] = useMutation(UPDATE_USER);
 
   const token = Auth.getToken();
-  const { username } = Auth.getProfile(token).data;
+  const { _id } = Auth.getProfile(token).data;
 
-  const { loading, error, data } = useQuery(GET_USER, {
-    variables: { username },
+  const { loading, error, data } = useQuery(GET_USER_BY_ID, {
+    variables: { id: _id },
   });
 
   useEffect(() => {
     if (data) {
-      setFirstName(data.user.firstName);
-      setLastName(data.user.lastName);
-      setEmail(data.user.email);
-      setUserId(data.user._id);
+      setFirstName(data.userById.firstName);
+      setLastName(data.userById.lastName);
+      setEmail(data.userById.email);
+      setUserId(data.userById._id);
+      setOfficeLocation(data.userById.officeLocation);
     }
   }, [data]);
 
@@ -63,6 +69,10 @@ const SettingsComponent = () => {
     setOpen(false);
   };
 
+  const handleOfficeLocationChange = (event) => {
+    setOfficeLocation(event.target.value);
+  };
+
   const handleDelete = () => {
     removeUserMutation({ variables: { userId } })
       .then(() => {
@@ -73,7 +83,6 @@ const SettingsComponent = () => {
       });
   };
 
-  // create check password function on backend. call the function if passwords match and new password matches confirmation, update user password
   const handlePasswordUpdate = async () => {
     const currentPasswordInput = document.getElementById('current-password');
     const newPasswordInput = document.getElementById('new-password');
@@ -88,8 +97,7 @@ const SettingsComponent = () => {
     const verifyEndpoint = `${hostUrl}${verifyUrl}`;
 
     const updateUrl = import.meta.env.VITE_UPDATE_ENDPOINT_URL;
-    const updateEndpoint = `${hostUrl}${updateUrl}`
-
+    const updateEndpoint = `${hostUrl}${updateUrl}`;
 
     if (newPassword !== confirmPassword) {
       alert('New password and confirm password do not match');
@@ -101,23 +109,22 @@ const SettingsComponent = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ userId, currentPassword }),
-
       });
+
       if (!verifyResponse.ok) {
         const errorData = await verifyResponse.json();
         alert(errorData.message);
         return;
       }
 
-      // Update password
       const updateResponse = await fetch(updateEndpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-           Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ userId, newPassword }),
       });
@@ -127,8 +134,6 @@ const SettingsComponent = () => {
         currentPasswordInput.value = '';
         newPasswordInput.value = '';
         confirmPasswordInput.value = '';
-
-        
       } else {
         const errorData = await updateResponse.json();
         alert(errorData.message);
@@ -143,6 +148,7 @@ const SettingsComponent = () => {
       firstName,
       lastName,
       email,
+      officeLocation
     };
     try {
       await updateUser({
@@ -173,7 +179,6 @@ const SettingsComponent = () => {
       <Container maxWidth="md">
         <Paper
           elevation={3}
-
           sx={{ marginBottom: 2, padding: { xs: 2, sm: 4, md: 6 } }}
         >
           <Typography variant="h4" component="header">
@@ -189,9 +194,6 @@ const SettingsComponent = () => {
               <Typography variant="h5" component="h2" gutterBottom>
                 Profile Information
               </Typography>
-              
-        
-
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                   <TextField
@@ -220,6 +222,36 @@ const SettingsComponent = () => {
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </Grid>
+                <Grid item xs={12}>
+                  <FormControl fullWidth required>
+                    <InputLabel id="officeLocation-label">
+                      Office Location
+                    </InputLabel>
+                    <Select
+                      labelId="officeLocation-label"
+                      id="officeLocation"
+                      name="officeLocation"
+                      value={officeLocation}
+                      onChange={handleOfficeLocationChange}
+                      label="Office Location"
+                      error={Boolean(officeLocationError)}
+                    >
+                      <MenuItem value="">
+                        <em>None</em>
+                      </MenuItem>
+                      <MenuItem value="Bristol">Bristol</MenuItem>
+                      <MenuItem value="Burlington">Burlington</MenuItem>
+                      <MenuItem value="Farmington">Farmington</MenuItem>
+                      <MenuItem value="Prospect">Prospect</MenuItem>
+                      <MenuItem value="Terryville">Terryville</MenuItem>
+                      <MenuItem value="Torrington">Torrington</MenuItem>
+                      <MenuItem value="Wolcott">Wolcott</MenuItem>
+                    </Select>
+                    {officeLocationError && (
+                      <p style={{ color: 'red' }}>{officeLocationError}</p>
+                    )}
+                  </FormControl>
+                </Grid>
               </Grid>
               <Box mt={2}>
                 <Button
@@ -243,11 +275,10 @@ const SettingsComponent = () => {
           elevation={3}
           sx={{ marginBottom: 2, padding: { xs: 2, sm: 4, md: 6 } }}
         >
-             <Typography variant="h5" component="h2" gutterBottom>
-              Change Password
-        
-            </Typography>
-          <Grid item xs={12} sx={{ marginBottom: 2}}>
+          <Typography variant="h5" component="h2" gutterBottom>
+            Change Password
+          </Typography>
+          <Grid item xs={12} sx={{ marginBottom: 2 }}>
             <TextField
               fullWidth
               id="current-password"
@@ -269,7 +300,7 @@ const SettingsComponent = () => {
               }}
             />
           </Grid>
-          <Grid item xs={12} sm={6} sx={{ marginBottom: 2}}>
+          <Grid item xs={12} sm={6} sx={{ marginBottom: 2 }}>
             <TextField
               fullWidth
               id="new-password"
@@ -291,7 +322,7 @@ const SettingsComponent = () => {
               }}
             />
           </Grid>
-          <Grid item xs={12} sm={6} sx={{ marginBottom: 2}}>
+          <Grid item xs={12} sm={6} sx={{ marginBottom: 2 }}>
             <TextField
               fullWidth
               id="confirm-password"
@@ -314,7 +345,11 @@ const SettingsComponent = () => {
             />
           </Grid>
           <Box mt={2}>
-            <Button variant="contained" color="primary" onClick={handlePasswordUpdate} >
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handlePasswordUpdate}
+            >
               Update Password
             </Button>
           </Box>

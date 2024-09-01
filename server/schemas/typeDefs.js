@@ -3,7 +3,6 @@ const typeDefs = `
     _id: ID!
     firstName: String!
     lastName: String!
-    username: String!
     email: String!
     officeLocation: String!
     formattedCreatedAt: String
@@ -38,7 +37,6 @@ const typeDefs = `
   }
 
   input NewUserInput {
-    username: String!
     firstName: String!
     lastName: String!
     password: String!
@@ -47,7 +45,6 @@ const typeDefs = `
   }
 
   input UpdateUserInput {
-    username: String
     firstName: String
     lastName: String
     email: String
