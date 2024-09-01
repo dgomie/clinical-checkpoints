@@ -17,7 +17,7 @@ export const GET_USER = gql`
       email
       firstName
       lastName
-      profilePicture
+      officeLocation
       formattedCreatedAt
     }
   }
@@ -31,7 +31,7 @@ export const GET_USER_BY_ID = gql`
       email
       firstName
       lastName
-      profilePicture
+      officeLocation
       formattedCreatedAt
     }
   }
