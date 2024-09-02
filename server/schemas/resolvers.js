@@ -12,7 +12,6 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-
 const resolvers = {
   Query: {
     users: async () => {
@@ -44,6 +43,7 @@ const resolvers = {
         lastName: userData.lastName,
         email: userData.email,
         officeLocation: userData.officeLocation,
+        isAdmin: userData.isAdmin || false, // Ensure isAdmin field is set
       });
       const token = signToken(newUser);
       return { token, user: newUser };
@@ -102,26 +102,35 @@ const resolvers = {
         checkPoint.checkpointCompleted = true;
         checkPoint.completedAt = new Date();
 
+        console.log('All tasks are completed. Sending emails to admin users.');
+
+        // Fetch the user associated with the checkpoint
+        const user = await User.findById(checkPoint.userId);
+        if (!user) {
+          throw new Error('User not found.');
+        }
+
         // Fetch admin users (assuming you have a User model and admin users have a role field)
         const adminUsers = await User.find({ isAdmin: true });
+        console.log(`Fetched ${adminUsers.length} admin users.`);
 
         // Send email to each admin user
-        adminUsers.forEach(admin => {
+        for (const admin of adminUsers) {
+          console.log(`Preparing to send email to ${admin.email}`);
           const mailOptions = {
             from: process.env.GMAIL_UN,
             to: admin.email,
             subject: 'Checkpoint Completed',
-            text: `All tasks in the checkpoint with focus area "${checkPoint.focusArea}" have been completed.`,
+            text: `All tasks in the checkpoint with focus area "${checkPoint.focusArea}" have been completed by ${user.firstName} ${user.lastName}.`,
           };
 
-          transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-              console.error('Error sending email:', error);
-            } else {
-              console.log('Email sent:', info.response);
-            }
-          });
-        });
+          try {
+            const info = await transporter.sendMail(mailOptions);
+            console.log(`Email sent to ${admin.email}: ${info.response}`);
+          } catch (error) {
+            console.error(`Error sending email to ${admin.email}:`, error);
+          }
+        }
       }
 
       // Save the updated checkpoint
