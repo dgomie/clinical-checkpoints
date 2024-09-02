@@ -34,3 +34,37 @@ export const GET_USER_BY_ID = gql`
     }
   }
 `;
+
+export const CHECKPOINTS_QUERY = gql`
+  query GetCheckPoints {
+    checkPoints {
+      id
+      focusArea
+      userId
+      tasks {
+        description
+        taskCompleted
+      }
+      createdAt
+      completedAt
+      checkpointCompleted
+    }
+  }
+`;
+
+export const CHECKPOINT_QUERY = gql`
+  query GetCheckPoint($id: ID!) {
+    checkPoint(id: $id) {
+      id
+      focusArea
+      userId
+      tasks {
+        description
+        taskCompleted
+      }
+      createdAt
+      completedAt
+      checkpointCompleted
+    }
+  }
+`;
