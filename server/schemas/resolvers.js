@@ -1,6 +1,16 @@
+require('dotenv').config(); 
 const { User, CheckPoint } = require('../models');
 const { signToken, AuthenticationError } = require('../utils/auth');
 const mongoose = require('mongoose');
+const nodemailer = require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.GMAIL_UN,
+    pass: process.env.GMAIL_PW
+  },
+});
 
 const resolvers = {
   Query: {
@@ -33,6 +43,7 @@ const resolvers = {
         lastName: userData.lastName,
         email: userData.email,
         officeLocation: userData.officeLocation,
+        isAdmin: userData.isAdmin || false, // Ensure isAdmin field is set
       });
       const token = signToken(newUser);
       return { token, user: newUser };
@@ -75,7 +86,57 @@ const resolvers = {
       const checkPoint = await CheckPoint.create(input);
       return checkPoint;
     },
+    
+    updateCheckPoint: async (parent, { checkPointId, updateData }) => {
+      // Find the checkpoint by ID
+      const checkPoint = await CheckPoint.findById(checkPointId);
+      if (!checkPoint) {
+        throw new Error('CheckPoint not found.');
+      }
 
+      // Update the checkpoint with the provided data
+      Object.assign(checkPoint, updateData);
+
+      // Check if all tasks are completed
+      if (checkPoint.tasks.every(task => task.taskCompleted)) {
+        checkPoint.checkpointCompleted = true;
+        checkPoint.completedAt = new Date();
+
+        console.log('All tasks are completed. Sending emails to admin users.');
+
+        // Fetch the user associated with the checkpoint
+        const user = await User.findById(checkPoint.userId);
+        if (!user) {
+          throw new Error('User not found.');
+        }
+
+        // Fetch admin users (assuming you have a User model and admin users have a role field)
+        const adminUsers = await User.find({ isAdmin: true });
+        console.log(`Fetched ${adminUsers.length} admin users.`);
+
+        // Send email to each admin user
+        for (const admin of adminUsers) {
+          console.log(`Preparing to send email to ${admin.email}`);
+          const mailOptions = {
+            from: process.env.GMAIL_UN,
+            to: admin.email,
+            subject: 'Checkpoint Completed',
+            text: `All tasks in the checkpoint with focus area "${checkPoint.focusArea}" have been completed by ${user.firstName} ${user.lastName}.`,
+          };
+
+          try {
+            const info = await transporter.sendMail(mailOptions);
+            console.log(`Email sent to ${admin.email}: ${info.response}`);
+          } catch (error) {
+            console.error(`Error sending email to ${admin.email}:`, error);
+          }
+        }
+      }
+
+      // Save the updated checkpoint
+      await checkPoint.save();
+      return checkPoint;
+    },
   },
 };
 

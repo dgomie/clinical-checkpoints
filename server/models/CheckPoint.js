@@ -2,7 +2,7 @@ const { Schema, model } = require('mongoose');
 
 const taskSchema = new Schema({
   description: { type: String },
-  isCompleted: { type: Boolean, default: false },
+  taskCompleted: { type: Boolean, default: false },
 });
 
 const CheckPointSchema = new Schema(
@@ -18,6 +18,7 @@ const CheckPointSchema = new Schema(
       required: true,
       default: Date.now,
     },
+    checkpointCompleted: { type: Boolean, default: false },
     completedAt: {
       type: Date,
     },
@@ -27,10 +28,6 @@ const CheckPointSchema = new Schema(
     toObject: { virtuals: true },
   }
 );
-
-
-CheckPointSchema.set('toJSON', { virtuals: true });
-CheckPointSchema.set('toObject', { virtuals: true });
 
 
 const CheckPoint = model('CheckPoint', CheckPointSchema);
