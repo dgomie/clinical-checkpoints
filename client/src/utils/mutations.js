@@ -44,3 +44,36 @@ export const UPDATE_USER = gql`
   }
 `;
 
+export const ADD_CHECKPOINT = gql`
+  mutation AddCheckPoint($input: NewCheckPointInput!) {
+    addCheckPoint(input: $input) {
+      id
+      focusArea
+      userId
+      tasks {
+        description
+        taskCompleted
+      }
+      createdAt
+      completedAt
+      checkpointCompleted
+    }
+  }
+`;
+
+export const UPDATE_CHECKPOINT = gql`
+  mutation UpdateCheckPoint($checkPointId: ID!, $updateData: UpdateCheckPointInput!) {
+    updateCheckPoint(checkPointId: $checkPointId, updateData: $updateData) {
+      id
+      focusArea
+      userId
+      tasks {
+        description
+        taskCompleted
+      }
+      createdAt
+      completedAt
+      checkpointCompleted
+    }
+  }
+`;

@@ -1,16 +1,16 @@
 import { Container } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-const ChecklistComponent = () => {
+const CheckpointsComponent = () => {
   const navigate = useNavigate();
 
 
   return (
     <Container sx={{ paddingBottom: '50px', display: "flex", justifyContent: 'center', alignItems: 'center'  }}>
 
-     Checklist
+     User Checkpoints
 
     </Container>
   );
 };
-export default ChecklistComponent;
+export default CheckpointsComponent;
