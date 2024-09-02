@@ -42,6 +42,10 @@ const router = createBrowserRouter([
         path: 'checkpoints',
         element: <CheckpointsPage />,
       },
+      {
+        path: 'checkpoints/:checkpointId',
+        element: <CheckpointsPage />,
+      },
     ],
   },
 ]);

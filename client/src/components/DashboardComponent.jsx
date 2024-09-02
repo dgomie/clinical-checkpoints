@@ -69,7 +69,7 @@ const DashboardComponent = () => {
             {incompleteCheckpoints.map((checkpoint) => (
               <ListItem key={checkpoint.id}>
                 <Link
-                  to={`./checkpoints/${checkpoint.id}`}
+                  to={`/checkpoints/${checkpoint.id}`}
                   style={{ width: '100%', textDecoration: 'none' }}
                 >
                   <Card
@@ -102,7 +102,7 @@ const DashboardComponent = () => {
             {completedCheckpoints.map((checkpoint) => (
               <ListItem key={checkpoint.id}>
                 <Link
-                  to={`./checkpoints/${checkpoint.id}`}
+                  to={`/checkpoints/${checkpoint.id}`}
                   style={{ width: '100%', textDecoration: 'none' }}
                 >
                   <Card
