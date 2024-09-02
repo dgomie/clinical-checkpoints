@@ -8,7 +8,7 @@ import SignUpPage from './pages/signUpPage.jsx';
 import ErrorPage from './pages/ErrorPage.jsx';
 import SettingsPage from './pages/SettingsPage.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
-import ChecklistPage from './pages/ChecklistPage.jsx';
+import CheckpointsPage from './pages/CheckpointsPage.jsx';
 
 
 const router = createBrowserRouter([
@@ -39,8 +39,12 @@ const router = createBrowserRouter([
         element: <DashboardPage />,
       },
       {
-        path: 'checklist',
-        element: <ChecklistPage />,
+        path: 'checkpoints',
+        element: <CheckpointsPage />,
+      },
+      {
+        path: 'checkpoints/:checkpointId',
+        element: <CheckpointsPage />,
       },
     ],
   },

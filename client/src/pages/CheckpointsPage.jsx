@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Auth from "../utils/auth";
-import ChecklistComponent from '../components/ChecklistComponent';
+import CheckpointsComponent from '../components/CheckpointsComponent';
 
-const ChecklistPage = () => {
+const CheckpointsPage = () => {
     const navigate = useNavigate();
     const [isLoggedIn, setIsLoggedIn] = useState(Auth.loggedIn());
 
@@ -20,8 +20,8 @@ const ChecklistPage = () => {
     }
 
     return (
-        <ChecklistComponent />
+        <CheckpointsComponent />
     );
 };
 
-export default ChecklistPage;
+export default CheckpointsPage;

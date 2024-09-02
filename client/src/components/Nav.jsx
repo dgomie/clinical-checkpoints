@@ -29,7 +29,7 @@ function Nav() {
   };
 
   const pages = isLoggedIn
-    ? ['dashboard', 'check lists', 'settings']
+    ? ['dashboard', 'checkpoints', 'settings']
     : ['login'];
 
   return (
