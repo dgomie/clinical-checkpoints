@@ -60,68 +60,76 @@ const DashboardComponent = () => {
       </Paper>
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography>Incomplete Checkpoints</Typography>
+          <Typography variant='h6'>Incomplete Checkpoints</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <List>
-            {incompleteCheckpoints.map((checkpoint) => (
-              <ListItem key={checkpoint.id}>
-                <Link
-                  to={`/checkpoints/${checkpoint.id}`}
-                  style={{ width: '100%', textDecoration: 'none' }}
-                >
-                  <Card
-                    sx={{
-                      width: '100%',
-                      '&:hover': {
-                        backgroundColor: 'rgba(0, 0, 0, 0.04)',
-                        boxShadow: 3,
-                      },
-                    }}
+          {incompleteCheckpoints.length === 0 ? (
+            <Typography>All Checkpoints Complete</Typography>
+          ) : (
+            <List>
+              {incompleteCheckpoints.map((checkpoint) => (
+                <ListItem key={checkpoint.id}>
+                  <Link
+                    to={`/checkpoints/${checkpoint.id}`}
+                    style={{ width: '100%', textDecoration: 'none' }}
                   >
-                    <CardContent>
-                      <Typography variant="h5">
-                        {checkpoint.focusArea}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Link>
-              </ListItem>
-            ))}
-          </List>
+                    <Card
+                      sx={{
+                        width: '100%',
+                        '&:hover': {
+                          backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                          boxShadow: 3,
+                        },
+                      }}
+                    >
+                      <CardContent>
+                        <Typography variant="h5">
+                          {checkpoint.focusArea}
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                </ListItem>
+              ))}
+            </List>
+          )}
         </AccordionDetails>
       </Accordion>
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography>Completed Checkpoints</Typography>
+          <Typography variant='h6'>Completed Checkpoints</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <List>
-            {completedCheckpoints.map((checkpoint) => (
-              <ListItem key={checkpoint.id}>
-                <Link
-                  to={`/checkpoints/${checkpoint.id}`}
-                  style={{ width: '100%', textDecoration: 'none' }}
-                >
-                  <Card
-                    sx={{
-                      width: '100%',
-                      '&:hover': {
-                        backgroundColor: 'rgba(0, 0, 0, 0.04)',
-                        boxShadow: 3,
-                      },
-                    }}
+          {completedCheckpoints.length === 0 ? (
+            <Typography>No Checkpoints to display</Typography>
+          ) : (
+            <List>
+              {completedCheckpoints.map((checkpoint) => (
+                <ListItem key={checkpoint.id}>
+                  <Link
+                    to={`/checkpoints/${checkpoint.id}`}
+                    style={{ width: '100%', textDecoration: 'none' }}
                   >
-                    <CardContent>
-                      <Typography variant="h5">
-                        {checkpoint.focusArea}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Link>
-              </ListItem>
-            ))}
-          </List>
+                    <Card
+                      sx={{
+                        width: '100%',
+                        '&:hover': {
+                          backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                          boxShadow: 3,
+                        },
+                      }}
+                    >
+                      <CardContent>
+                        <Typography variant="h5">
+                          {checkpoint.focusArea}
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                </ListItem>
+              ))}
+            </List>
+          )}
         </AccordionDetails>
       </Accordion>
     </Container>
