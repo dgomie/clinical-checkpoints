@@ -1,15 +1,26 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Box, TextField, Button, Typography } from '@mui/material';
+import { Box, TextField, Button, Typography, Alert } from '@mui/material'; // Import Alert
 
 const PasswordReset = () => {
   const navigate = useNavigate();
   const { token } = useParams();
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+
+  const validatePassword = (password) => {
+    const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return regex.test(password);
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (!validatePassword(password)) {
+      setPasswordError('Password must be at least 8 characters long and include a number, special character, and a capital letter.');
+      return;
+    }
+    setPasswordError('');
     try {
       const response = await fetch(`${import.meta.env.VITE_HOST_URL}/api/reset-password`, {
         method: 'POST',
@@ -68,6 +79,11 @@ const PasswordReset = () => {
         <Button type="submit" variant="contained" color="primary">
           Reset Password
         </Button>
+        {passwordError && (
+          <Alert severity="error" sx={{ mt: 2 }}>
+            {passwordError}
+          </Alert>
+        )}
         {message && (
           <Typography variant="body2" sx={{ mt: 2 }}>
             {message}
