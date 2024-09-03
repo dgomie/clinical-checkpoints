@@ -9,6 +9,8 @@ import ErrorPage from './pages/ErrorPage.jsx';
 import SettingsPage from './pages/SettingsPage.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
 import CheckpointsPage from './pages/CheckpointsPage.jsx';
+import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
+import PasswordResetPage from './pages/PasswordResetPage.jsx';
 
 
 const router = createBrowserRouter([
@@ -29,6 +31,14 @@ const router = createBrowserRouter([
       {
         path: 'signUp',
         element: <SignUpPage />,
+      },
+      {
+        path: 'forgot-password',
+        element: <ForgotPasswordPage />,
+      },
+      {
+        path: 'reset-password/:token',
+        element: <PasswordResetPage />,
       },
       {
         path: 'settings',
