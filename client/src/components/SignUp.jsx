@@ -106,7 +106,7 @@ const Signup = () => {
               alignItems: 'center',
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: '#e69138' }}>
+            <Avatar sx={{ m: 1 }}>
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h4">
@@ -171,6 +171,9 @@ const Signup = () => {
                       value={officeLocation}
                       onChange={handleOfficeLocationChange}
                       label="Office Location"
+                      sx={{
+                        backgroundColor: 'white', // Change this to your desired color
+                      }}
                     >
                       <MenuItem value="Bristol">Bristol</MenuItem>
                       <MenuItem value="Burlington">Burlington</MenuItem>
@@ -251,10 +254,6 @@ const Signup = () => {
                 sx={{
                   mt: 3,
                   mb: 2,
-                  backgroundColor: '#c27ba0',
-                  '&:hover': {
-                    backgroundColor: '#a64d79',
-                  },
                 }}
               >
                 Sign Up

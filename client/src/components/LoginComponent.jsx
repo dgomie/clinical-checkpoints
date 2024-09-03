@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { TextField, Box, Typography, Button } from '@mui/material';
+import { TextField, Box, Typography, Button, Container } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { LOGIN_USER } from '../utils/mutations';
@@ -72,6 +72,9 @@ function LoginComponent() {
         >
           Login
         </Typography>
+        <Typography sx={{ mb: 1, textAlign: "center"}}>
+        Or <Link to="/signUp">sign up for a new account</Link>
+    </Typography>
         <TextField
           label="Email"
           variant="outlined"
@@ -118,9 +121,12 @@ function LoginComponent() {
             {errorMessage}
           </Typography>
         )}
-        <Typography sx={{ marginTop: 3 }}>
-          <Link to="/signUp">Don't have an account? Sign Up</Link>
-        </Typography>
+
+        <Container sx={{ mt: 3, textAlign: "center"}}>
+        <Link to="/forgot-password" variant="body2" sx={{ mt: 3 }}>
+          Forgot Password?
+        </Link>
+        </Container>
       </Box>
     </Box>
   );

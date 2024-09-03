@@ -121,7 +121,7 @@ const resolvers = {
             from: process.env.GMAIL_UN,
             to: admin.email,
             subject: 'Checkpoint Completed',
-            text: `All tasks in the checkpoint with focus area "${checkPoint.focusArea}" have been completed by ${user.firstName} ${user.lastName}.`,
+            text: `${user.firstName} ${user.lastName} of the ${user.officeLocation} office has completed all tasks of the "${checkPoint.focusArea}" on ${checkPoint.completedAt}.`,
           };
 
           try {

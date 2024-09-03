@@ -19,6 +19,17 @@ import PersonIcon from '@mui/icons-material/Person';
 function Nav() {
   const navigate = useNavigate();
   const isLoggedIn = Auth.loggedIn();
+  let isAdmin = false;
+
+  if (isLoggedIn) {
+    try {
+      isAdmin = Auth.getProfile().data.isAdmin;
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      Auth.logout(); // Log out the user if the token is invalid
+      navigate('/login'); // Redirect to login page
+    }
+  }
 
   const [value, setValue] = React.useState(0);
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -29,7 +40,7 @@ function Nav() {
   };
 
   const pages = isLoggedIn
-    ? ['dashboard', 'checkpoints', 'settings']
+    ? ['dashboard', ...(isAdmin ? ['admin'] : []), 'settings']
     : ['login'];
 
   return (
@@ -104,7 +115,7 @@ function Nav() {
               icon={
                 index === 0 ? (
                   <HomeRoundedIcon />
-                ) : index === 1 ? (
+                ) : index === 1 && isAdmin ? (
                   <AssignmentTurnedInIcon />
                 ) : (
                   <PersonIcon />

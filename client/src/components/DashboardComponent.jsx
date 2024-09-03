@@ -22,8 +22,6 @@ const DashboardComponent = () => {
   const user = Auth.getProfile();
   const userId = user?.data?._id;
 
-  console.log(userId);
-
   const {
     loading: userLoading,
     error: userError,
