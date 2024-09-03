@@ -9,7 +9,8 @@ import {
   Paper,
   Typography,
   Checkbox,
-  Button, 
+  Button,
+  Alert,
 } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery, useMutation } from '@apollo/client';
@@ -29,12 +30,12 @@ const CheckpointsComponent = () => {
   const [checkpoint, setCheckpoint] = useState('');
   const [tasks, setTasks] = useState([]);
   const [initialTasks, setInitialTasks] = useState([]);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     if (data) {
-      console.log('Data received from query:', data);
       setCheckpoint(data.checkPoint);
-      console.log('Checkpoint', data.checkPoint);
       if (data.checkPoint && data.checkPoint.tasks) {
         const initialTasks = data.checkPoint.tasks.map(task => ({
           ...task,
@@ -42,34 +43,40 @@ const CheckpointsComponent = () => {
         }));
         setTasks(initialTasks);
         setInitialTasks(initialTasks);
-        console.log('Initial tasks set:', initialTasks);
-      } else {
-        console.error('data.checkPoint.tasks is undefined');
-      }
+      } 
     }
   }, [data]);
 
+  useEffect(() => {
+    if (successMessage || errorMessage) {
+      const timer = setTimeout(() => {
+        setSuccessMessage('');
+        setErrorMessage('');
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [successMessage, errorMessage]);
+
   const handleCheckboxChange = (index) => {
-    console.log('Checkbox changed at index:', index);
     const updatedTasks = tasks.map((task, i) =>
       i === index ? { ...task, checked: !task.checked } : task
     );
     setTasks(updatedTasks);
-    console.log('Updated tasks:', updatedTasks);
   };
 
   const handleSave = () => {
-    console.log('Saving tasks:', tasks);
     const filteredTasks = tasks.map(({ __typename, checked, ...rest }) => ({
       ...rest,
       taskCompleted: checked,
     }));
     updateCheckpoint({ variables: { checkPointId: checkpointId, updateData: { tasks: filteredTasks } } })
       .then(response => {
-        console.log('Tasks saved successfully:', response);
+        setSuccessMessage('Tasks saved successfully!');
+        setErrorMessage('');
       })
       .catch(error => {
-        console.error('Error saving tasks:', error);
+        setErrorMessage('Error saving tasks. Please try again.');
+        setSuccessMessage('');
       });
   };
 
@@ -112,6 +119,8 @@ const CheckpointsComponent = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      {successMessage && <Alert severity="success" style={{ marginTop: '20px' }}>{successMessage}</Alert>}
+      {errorMessage && <Alert severity="error" style={{ marginTop: '20px' }}>{errorMessage}</Alert>}
       <Button
         variant="contained"
         color="secondary"
