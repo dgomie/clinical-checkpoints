@@ -106,7 +106,7 @@ const CheckpointsComponent = () => {
           </TableHead>
           <TableBody>
             {tasks.map((task, index) => (
-              <TableRow key={task.id}>
+              <TableRow key={index}>
                 <TableCell>{task.description}</TableCell>
                 <TableCell>
                   <Checkbox
