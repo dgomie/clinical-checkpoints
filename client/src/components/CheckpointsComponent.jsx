@@ -9,7 +9,7 @@ import {
   Paper,
   Typography,
   Checkbox,
-  Button, // Import Button component
+  Button, 
 } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery, useMutation } from '@apollo/client';
@@ -28,6 +28,7 @@ const CheckpointsComponent = () => {
   const [updateCheckpoint] = useMutation(UPDATE_CHECKPOINT);
   const [checkpoint, setCheckpoint] = useState('');
   const [tasks, setTasks] = useState([]);
+  const [initialTasks, setInitialTasks] = useState([]);
 
   useEffect(() => {
     if (data) {
@@ -35,12 +36,12 @@ const CheckpointsComponent = () => {
       setCheckpoint(data.checkPoint);
       console.log('Checkpoint', data.checkPoint);
       if (data.checkPoint && data.checkPoint.tasks) {
-        // Assuming data.checkPoint.tasks is an array of tasks
         const initialTasks = data.checkPoint.tasks.map(task => ({
           ...task,
-          checked: task.taskCompleted, // Initialize checked based on taskCompleted
+          checked: task.taskCompleted,
         }));
         setTasks(initialTasks);
+        setInitialTasks(initialTasks);
         console.log('Initial tasks set:', initialTasks);
       } else {
         console.error('data.checkPoint.tasks is undefined');
@@ -61,7 +62,7 @@ const CheckpointsComponent = () => {
     console.log('Saving tasks:', tasks);
     const filteredTasks = tasks.map(({ __typename, checked, ...rest }) => ({
       ...rest,
-      taskCompleted: checked, // Update taskCompleted based on checked
+      taskCompleted: checked,
     }));
     updateCheckpoint({ variables: { checkPointId: checkpointId, updateData: { tasks: filteredTasks } } })
       .then(response => {
@@ -71,6 +72,8 @@ const CheckpointsComponent = () => {
         console.error('Error saving tasks:', error);
       });
   };
+
+  const isSaveDisabled = JSON.stringify(initialTasks) === JSON.stringify(tasks);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
@@ -114,6 +117,7 @@ const CheckpointsComponent = () => {
         color="secondary"
         onClick={handleSave}
         style={{ display: 'block', margin: '20px auto' }}
+        disabled={isSaveDisabled}
       >
         Save
       </Button>
