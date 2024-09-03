@@ -131,6 +131,9 @@ const resolvers = {
             console.error(`Error sending email to ${admin.email}:`, error);
           }
         }
+      } else {
+        checkPoint.checkpointCompleted = false;
+        checkPoint.completedAt = null;
       }
 
       // Save the updated checkpoint
