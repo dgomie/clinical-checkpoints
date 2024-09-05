@@ -1,15 +1,15 @@
-require('dotenv').config(); 
+require('dotenv').config();
 const { User, CheckPoint } = require('../models');
 const { signToken, AuthenticationError } = require('../utils/auth');
 const mongoose = require('mongoose');
 const nodemailer = require('nodemailer');
-const checkpointData = require('../seeders/checkpointData')
+const checkpointData = require('../seeders/checkpointData');
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     user: process.env.GMAIL_UN,
-    pass: process.env.GMAIL_PW
+    pass: process.env.GMAIL_PW,
   },
 });
 
@@ -44,10 +44,10 @@ const resolvers = {
         lastName: userData.lastName,
         email: userData.email,
         officeLocation: userData.officeLocation,
-        isAdmin: userData.isAdmin || false, 
+        isAdmin: userData.isAdmin || false,
       });
 
-      const updatedCheckpointData = checkpointData.map(checkpoint => ({
+      const updatedCheckpointData = checkpointData.map((checkpoint) => ({
         ...checkpoint,
         userId: newUser._id,
       }));
@@ -95,7 +95,7 @@ const resolvers = {
       const checkPoint = await CheckPoint.create(input);
       return checkPoint;
     },
-    
+
     updateCheckPoint: async (parent, { checkPointId, updateData }) => {
       // Find the checkpoint by ID
       const checkPoint = await CheckPoint.findById(checkPointId);
@@ -107,9 +107,12 @@ const resolvers = {
       Object.assign(checkPoint, updateData);
 
       // Check if all tasks are completed
-      if (checkPoint.tasks.every(task => task.taskCompleted)) {
+      if (checkPoint.tasks.every((task) => task.taskCompleted)) {
         checkPoint.checkpointCompleted = true;
-        checkPoint.completedAt = new Date();
+        const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        checkPoint.completedAt = new Date().toLocaleString('en-US', {
+          timeZone: userTimeZone,
+        });
 
         console.log('All tasks are completed. Sending emails to admin users.');
 
