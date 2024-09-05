@@ -36,18 +36,16 @@ export const GET_USER_BY_ID = gql`
 `;
 
 export const CHECKPOINTS_QUERY = gql`
-  query GetCheckPoints {
-    checkPoints {
+  query CheckPoints($userId: ID!) {
+    checkPoints(userId: $userId) {
       id
       focusArea
-      userId
+      checkpointCompleted
       tasks {
         description
         taskCompleted
       }
-      createdAt
       completedAt
-      checkpointCompleted
     }
   }
 `;
