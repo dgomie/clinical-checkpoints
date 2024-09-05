@@ -105,10 +105,6 @@ function LoginComponent() {
           variant="contained"
           sx={{
             mt: 1,
-            backgroundColor: '#c27ba0',
-            '&:hover': {
-              backgroundColor: '#a64d79',
-            },
             width: '10%',
             minWidth: '120px',
             marginTop: 3,
