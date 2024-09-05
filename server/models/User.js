@@ -1,5 +1,6 @@
 const { Schema, model } = require("mongoose");
 const bcrypt = require("bcrypt");
+const CheckPoint = require('./CheckPoint'); 
 
 const userSchema = new Schema(
   {
@@ -56,6 +57,12 @@ userSchema.pre("save", async function (next) {
     this.password = await bcrypt.hash(this.password, saltRounds);
   }
 
+  next();
+});
+
+userSchema.pre('findOneAndDelete', async function (next) {
+  const user = await this.model.findOne(this.getQuery());
+  await CheckPoint.deleteMany({ userId: user._id });
   next();
 });
 

@@ -37,13 +37,13 @@ const CheckpointsComponent = () => {
     if (data) {
       setCheckpoint(data.checkPoint);
       if (data.checkPoint && data.checkPoint.tasks) {
-        const initialTasks = data.checkPoint.tasks.map(task => ({
+        const initialTasks = data.checkPoint.tasks.map((task) => ({
           ...task,
           checked: task.taskCompleted,
         }));
         setTasks(initialTasks);
         setInitialTasks(initialTasks);
-      } 
+      }
     }
   }, [data]);
 
@@ -69,12 +69,17 @@ const CheckpointsComponent = () => {
       ...rest,
       taskCompleted: checked,
     }));
-    updateCheckpoint({ variables: { checkPointId: checkpointId, updateData: { tasks: filteredTasks } } })
-      .then(response => {
+    updateCheckpoint({
+      variables: {
+        checkPointId: checkpointId,
+        updateData: { tasks: filteredTasks },
+      },
+    })
+      .then(() => {
         setSuccessMessage('Tasks saved successfully!');
         setErrorMessage('');
       })
-      .catch(error => {
+      .catch(() => {
         setErrorMessage('Error saving tasks. Please try again.');
         setSuccessMessage('');
       });
@@ -95,20 +100,22 @@ const CheckpointsComponent = () => {
       >
         Back to Dashboard
       </Button>
-      <Typography variant="h4" align="center">{checkpoint.focusArea}</Typography>
+      <Typography variant="h4" align="center">
+        {checkpoint.focusArea}
+      </Typography>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
-            <TableRow>
-              <TableCell>Task</TableCell>
-              <TableCell>Completed</TableCell>
+            <TableRow sx={{ backgroundColor: 'lightblue' }}>
+              <TableCell sx={{ fontSize: '1rem' , textAlign: 'center' }}>Task</TableCell>
+              <TableCell sx={{ fontSize: '1rem' , textAlign: 'center' }}>Completed</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {tasks.map((task, index) => (
               <TableRow key={index}>
                 <TableCell>{task.description}</TableCell>
-                <TableCell>
+                <TableCell sx={{ textAlign: 'center' }}>
                   <Checkbox
                     checked={task.checked}
                     onChange={() => handleCheckboxChange(index)}
@@ -119,8 +126,16 @@ const CheckpointsComponent = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      {successMessage && <Alert severity="success" style={{ marginTop: '20px' }}>{successMessage}</Alert>}
-      {errorMessage && <Alert severity="error" style={{ marginTop: '20px' }}>{errorMessage}</Alert>}
+      {successMessage && (
+        <Alert severity="success" style={{ marginTop: '20px' }}>
+          {successMessage}
+        </Alert>
+      )}
+      {errorMessage && (
+        <Alert severity="error" style={{ marginTop: '20px' }}>
+          {errorMessage}
+        </Alert>
+      )}
       <Button
         variant="contained"
         color="secondary"

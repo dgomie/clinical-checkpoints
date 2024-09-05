@@ -3,6 +3,7 @@ const { User, CheckPoint } = require('../models');
 const { signToken, AuthenticationError } = require('../utils/auth');
 const mongoose = require('mongoose');
 const nodemailer = require('nodemailer');
+const checkpointData = require('../seeders/checkpointData')
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -46,40 +47,12 @@ const resolvers = {
         isAdmin: userData.isAdmin || false, 
       });
 
-      const checkpointData = {
-        focusArea: "Shoulder Clinical Check Points",
-        tasks: [
-          {
-            description: "Perform Scapular Assistance Test and discuss implications for positive findings",
-            taskCompleted: false,
-          },
-          {
-            description: "Perform the special test cluster for diagnosis of superior to posterior tendon rotator cuff tear.",
-            taskCompleted: false,
-          },
-          {
-            description: "Perform the special test cluster for diagnosis of glenohumeral anterior instability.",
-            taskCompleted: false,
-          },
-          {
-            description: "Review glenhumeral AP and inferior joint mobilizations",
-            taskCompleted: false,
-          },
-          {
-            description: "Review AC joint mobilizations",
-            taskCompleted: false,
-          },
-          {
-            description: "Review scapulothoracic mobilizations and manipulation",
-            taskCompleted: false,
-          }
-        ],
-        checkpointCompleted: false,
-        completedAt: null,
+      const updatedCheckpointData = checkpointData.map(checkpoint => ({
+        ...checkpoint,
         userId: newUser._id,
-      };
+      }));
 
-      await CheckPoint.create(checkpointData);
+      await CheckPoint.create(updatedCheckpointData);
 
       const token = signToken(newUser);
       return { token, user: newUser };
