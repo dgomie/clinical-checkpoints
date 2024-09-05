@@ -1,5 +1,5 @@
 # APT Clinical Checkpoints
-  ![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)
+  ![GitHub license](https://img.shields.io/badge/license-Apache_2.0-blue.svg)
 <img src="./client/src/images/homepage.png" width='100%'>
 
   ### Table of Contents  
@@ -56,7 +56,7 @@
   * Email: <a href="mailto:danny.f.gomez@gmail.com">danny.f.gomez@gmail.com</a>
 
   ## License
-  This application is covered under the MIT license  
-  https://choosealicense.com/licenses/mit 
+  This application is covered under the Apache 2.0 license  
+  https://choosealicense.com/licenses/apache-2.0 
 
   
