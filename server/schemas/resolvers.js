@@ -26,8 +26,8 @@ const resolvers = {
       return await User.findById(id);
     },
 
-    checkPoints: async () => {
-      return await CheckPoint.find();
+    checkPoints: async (parent, { userId }) => {
+      return await CheckPoint.find({ userId });
     },
 
     checkPoint: async (parent, { id }) => {
@@ -43,8 +43,44 @@ const resolvers = {
         lastName: userData.lastName,
         email: userData.email,
         officeLocation: userData.officeLocation,
-        isAdmin: userData.isAdmin || false, // Ensure isAdmin field is set
+        isAdmin: userData.isAdmin || false, 
       });
+
+      const checkpointData = {
+        focusArea: "Shoulder Clinical Check Points",
+        tasks: [
+          {
+            description: "Perform Scapular Assistance Test and discuss implications for positive findings",
+            taskCompleted: false,
+          },
+          {
+            description: "Perform the special test cluster for diagnosis of superior to posterior tendon rotator cuff tear.",
+            taskCompleted: false,
+          },
+          {
+            description: "Perform the special test cluster for diagnosis of glenohumeral anterior instability.",
+            taskCompleted: false,
+          },
+          {
+            description: "Review glenhumeral AP and inferior joint mobilizations",
+            taskCompleted: false,
+          },
+          {
+            description: "Review AC joint mobilizations",
+            taskCompleted: false,
+          },
+          {
+            description: "Review scapulothoracic mobilizations and manipulation",
+            taskCompleted: false,
+          }
+        ],
+        checkpointCompleted: false,
+        completedAt: null,
+        userId: newUser._id,
+      };
+
+      await CheckPoint.create(checkpointData);
+
       const token = signToken(newUser);
       return { token, user: newUser };
     },

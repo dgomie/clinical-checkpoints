@@ -33,7 +33,7 @@ const typeDefs = `
     users: [User]
     user(email: String!): User
     userById(id: ID!): User
-    checkPoints: [CheckPoint]
+    checkPoints(userId: ID!): [CheckPoint!]!
     checkPoint(id: ID!): CheckPoint
   }
 
