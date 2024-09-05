@@ -11,6 +11,7 @@ import DashboardPage from './pages/DashboardPage.jsx';
 import CheckpointsPage from './pages/CheckpointsPage.jsx';
 import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
 import PasswordResetPage from './pages/PasswordResetPage.jsx';
+import AdminPage from './pages/AdminPage.jsx';
 
 
 const router = createBrowserRouter([
@@ -56,6 +57,10 @@ const router = createBrowserRouter([
         path: 'checkpoints/:checkpointId',
         element: <CheckpointsPage />,
       },
+      {
+        path: 'admin',
+        element: <AdminPage />
+      }
     ],
   },
 ]);
