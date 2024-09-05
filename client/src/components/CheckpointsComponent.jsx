@@ -75,11 +75,11 @@ const CheckpointsComponent = () => {
         updateData: { tasks: filteredTasks },
       },
     })
-      .then((response) => {
+      .then(() => {
         setSuccessMessage('Tasks saved successfully!');
         setErrorMessage('');
       })
-      .catch((error) => {
+      .catch(() => {
         setErrorMessage('Error saving tasks. Please try again.');
         setSuccessMessage('');
       });
