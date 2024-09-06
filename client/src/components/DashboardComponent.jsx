@@ -11,14 +11,12 @@ import {
   ListItem,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Auth from '../utils/auth';
-import { useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
 import { GET_USER_BY_ID, CHECKPOINTS_QUERY } from '../utils/queries';
 
 const DashboardComponent = () => {
-  const navigate = useNavigate();
   const user = Auth.getProfile();
   const userId = user?.data?._id;
 
@@ -60,7 +58,7 @@ const DashboardComponent = () => {
       </Paper>
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography variant='h6'>Incomplete Checkpoints</Typography>
+          <Typography variant='h6'>Assigned Checkpoints</Typography>
         </AccordionSummary>
         <AccordionDetails>
           {incompleteCheckpoints.length === 0 ? (
