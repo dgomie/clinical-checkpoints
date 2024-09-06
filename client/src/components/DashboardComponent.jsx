@@ -60,7 +60,7 @@ const DashboardComponent = () => {
       </Paper>
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography variant='h6'>Incomplete Checkpoints</Typography>
+          <Typography variant='h6'>Assigned Checkpoints</Typography>
         </AccordionSummary>
         <AccordionDetails>
           {incompleteCheckpoints.length === 0 ? (
