@@ -5,6 +5,9 @@ export const GET_USERS = gql`
     users {
       _id
       email
+      firstName
+      lastName
+      officeLocation
     }
   }
 `;
