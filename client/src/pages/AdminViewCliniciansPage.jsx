@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Auth from "../utils/auth";
 import AdminViewCliniciansComponent from '../components/AdminViewCliniciansComponent';
 
-const AdminPage = () => {
+const AdminViewCliniciansPage = () => {
     const navigate = useNavigate();
     const [isLoggedIn, setIsLoggedIn] = useState(Auth.loggedIn());
     const [isAdmin, setIsAdmin] = useState(null); 
@@ -50,4 +50,4 @@ const AdminPage = () => {
     );
 };
 
-export default AdminPage;
+export default AdminViewCliniciansPage;
