@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Auth from "../utils/auth";
-import AdminComponent from '../components/AdminComponent';
+import AdminViewCliniciansComponent from '../components/AdminViewCliniciansComponent';
 
 const AdminPage = () => {
     const navigate = useNavigate();
@@ -46,7 +46,7 @@ const AdminPage = () => {
     }
 
     return (
-        <AdminComponent />
+        <AdminViewCliniciansComponent />
     );
 };
 
