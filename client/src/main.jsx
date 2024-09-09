@@ -13,6 +13,7 @@ import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
 import PasswordResetPage from './pages/PasswordResetPage.jsx';
 import AdminPage from './pages/AdminPage.jsx';
 import AdminViewCliniciansPage from './pages/AdminViewCliniciansPage.jsx';
+import AdminSchedulePage from './pages/AdminSchedulePage.jsx';
 
 
 const router = createBrowserRouter([
@@ -65,6 +66,10 @@ const router = createBrowserRouter([
       {
         path: 'admin/view-clinicians',
         element: <AdminViewCliniciansPage />
+      },
+      {
+        path: 'admin/view-schedule',
+        element: <AdminSchedulePage />
       }
     ],
   },
