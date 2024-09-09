@@ -12,6 +12,7 @@ const AdminViewCliniciansComponent = () => {
   const currentUserId = Auth.getProfile().data._id;
 
   const [open, setOpen] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false); // State for confirmation modal
   const [selectedUser, setSelectedUser] = useState(null);
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
@@ -57,27 +58,30 @@ const AdminViewCliniciansComponent = () => {
     return newErrors;
   };
 
-  const handleUpdate = async () => {
+  const handleUpdate = () => {
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
+    setConfirmOpen(true); // Show confirmation modal
+  };
 
-    if (window.confirm('Are you sure you want to save the changes?')) {
-      try {
-        const { _id, firstName, lastName, email, officeLocation } = selectedUser;
-        await updateUser({
-          variables: { userId: _id, updateData: { firstName, lastName, email, officeLocation } },
-        });
-        setSuccessMessage('User updated successfully!');
-        setErrorMessage('');
-        refetch(); // Refetch the data to refresh the component
-      } catch (err) {
-        setErrorMessage('Failed to update user. Please try again.');
-        setSuccessMessage('');
-        console.error(err);
-      }
+  const handleConfirmUpdate = async () => {
+    try {
+      const { _id, firstName, lastName, email, officeLocation } = selectedUser;
+      await updateUser({
+        variables: { userId: _id, updateData: { firstName, lastName, email, officeLocation } },
+      });
+      setSuccessMessage('User updated successfully!');
+      setErrorMessage('');
+      refetch(); // Refetch the data to refresh the component
+      setConfirmOpen(false); // Close confirmation modal
+      handleClose(); // Close edit modal
+    } catch (err) {
+      setErrorMessage('Failed to update user. Please try again.');
+      setSuccessMessage('');
+      console.error(err);
     }
   };
 
@@ -182,6 +186,17 @@ const AdminViewCliniciansComponent = () => {
               </Box>
             </Box>
           )}
+        </Box>
+      </Modal>
+
+      <Modal open={confirmOpen} onClose={() => setConfirmOpen(false)}>
+        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 300, bgcolor: 'background.paper', boxShadow: 24, p: 4 }}>
+          <Typography variant="h6" component="h2">Confirm Update</Typography>
+          <Typography sx={{ mt: 2 }}>Are you sure you want to save the changes?</Typography>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+            <Button variant="contained" color="primary" onClick={handleConfirmUpdate}>Yes</Button>
+            <Button variant="outlined" color="secondary" onClick={() => setConfirmOpen(false)}>No</Button>
+          </Box>
         </Box>
       </Modal>
     </Container>
