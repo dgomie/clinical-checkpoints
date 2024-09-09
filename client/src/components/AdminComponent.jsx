@@ -22,7 +22,6 @@ const AdminComponent = () => {
           value={selectedTab}
           onChange={handleTabChange}
           centered
-          variant="scrollable"
           scrollButtons="auto"
           sx={{
             '& .MuiTabs-indicator': {
