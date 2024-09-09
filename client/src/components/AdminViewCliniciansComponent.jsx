@@ -3,16 +3,18 @@ import { Paper, Container, List, ListItem, ListItemText, Accordion, AccordionSum
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useQuery, useMutation } from '@apollo/client';
 import { GET_USERS } from '../utils/queries';
-import { UPDATE_USER } from '../utils/mutations';
+import { UPDATE_USER, REMOVE_USER } from '../utils/mutations';
 import Auth from '../utils/auth';
 
 const AdminViewCliniciansComponent = () => {
   const { loading, error, data, refetch } = useQuery(GET_USERS);
   const [updateUser] = useMutation(UPDATE_USER);
+  const [removeUser] = useMutation(REMOVE_USER); 
   const currentUserId = Auth.getProfile().data._id;
 
   const [open, setOpen] = useState(false);
-  const [confirmOpen, setConfirmOpen] = useState(false); // State for confirmation modal
+  const [confirmOpen, setConfirmOpen] = useState(false); 
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false); 
   const [selectedUser, setSelectedUser] = useState(null);
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
@@ -21,7 +23,8 @@ const AdminViewCliniciansComponent = () => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
-  const users = data.users.filter(user => user._id !== currentUserId);
+  // const users = data.users.filter(user => user._id !== currentUserId);
+  const users = data.users
 
   const groupedUsers = users.reduce((acc, user) => {
     const { officeLocation } = user;
@@ -64,7 +67,7 @@ const AdminViewCliniciansComponent = () => {
       setErrors(validationErrors);
       return;
     }
-    setConfirmOpen(true); // Show confirmation modal
+    setConfirmOpen(true); 
   };
 
   const handleConfirmUpdate = async () => {
@@ -75,11 +78,33 @@ const AdminViewCliniciansComponent = () => {
       });
       setSuccessMessage('User updated successfully!');
       setErrorMessage('');
-      refetch(); // Refetch the data to refresh the component
-      setConfirmOpen(false); // Close confirmation modal
-      handleClose(); // Close edit modal
+      refetch();
+      setConfirmOpen(false);
+      handleClose(); 
     } catch (err) {
       setErrorMessage('Failed to update user. Please try again.');
+      setSuccessMessage('');
+      console.error(err);
+    }
+  };
+
+  const handleDelete = () => {
+    setDeleteConfirmOpen(true); 
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      const { _id } = selectedUser;
+      await removeUser({
+        variables: { userId: _id },
+      });
+      setSuccessMessage('User deleted successfully!');
+      setErrorMessage('');
+      refetch(); 
+      setDeleteConfirmOpen(false); 
+      handleClose(); 
+    } catch (err) {
+      setErrorMessage('Failed to delete user. Please try again.');
       setSuccessMessage('');
       console.error(err);
     }
@@ -183,6 +208,7 @@ const AdminViewCliniciansComponent = () => {
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
                 <Button variant="contained" color="primary" onClick={handleUpdate}>Update</Button>
                 <Button variant="outlined" color="secondary" onClick={handleClose}>Cancel</Button>
+                <Button variant="contained" color="error" onClick={handleDelete}>Delete User</Button>
               </Box>
             </Box>
           )}
@@ -196,6 +222,17 @@ const AdminViewCliniciansComponent = () => {
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
             <Button variant="contained" color="primary" onClick={handleConfirmUpdate}>Yes</Button>
             <Button variant="outlined" color="secondary" onClick={() => setConfirmOpen(false)}>No</Button>
+          </Box>
+        </Box>
+      </Modal>
+
+      <Modal open={deleteConfirmOpen} onClose={() => setDeleteConfirmOpen(false)}>
+        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 300, bgcolor: 'background.paper', boxShadow: 24, p: 4 }}>
+          <Typography variant="h6" component="h2">Confirm Delete</Typography>
+          <Typography sx={{ mt: 2 }}>Are you sure you want to delete this user?</Typography>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+            <Button variant="contained" color="error" onClick={handleConfirmDelete}>Yes</Button>
+            <Button variant="outlined" color="secondary" onClick={() => setDeleteConfirmOpen(false)}>No</Button>
           </Box>
         </Box>
       </Modal>
