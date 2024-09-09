@@ -63,14 +63,6 @@ const router = createBrowserRouter([
         path: 'admin',
         element: <AdminPage />
       },
-      {
-        path: 'admin/view-clinicians',
-        element: <AdminViewCliniciansPage />
-      },
-      {
-        path: 'admin/schedule',
-        element: <AdminSchedulePage />
-      }
     ],
   },
 ]);
