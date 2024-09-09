@@ -31,7 +31,7 @@ const AdminViewCliniciansComponent = () => {
       <Paper elevation={3} sx={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem', textAlign:'center'}}>
         <Typography variant='h5'>View All Clinicians</Typography>
       </Paper>
-      <Paper elevation={3} sx={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+
         {Object.keys(groupedUsers).sort().map(location => (
           <Accordion key={location}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -56,7 +56,7 @@ const AdminViewCliniciansComponent = () => {
             </AccordionDetails>
           </Accordion>
         ))}
-      </Paper>
+
     </Container>
   );
 };
