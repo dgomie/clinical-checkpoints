@@ -68,7 +68,7 @@ const router = createBrowserRouter([
         element: <AdminViewCliniciansPage />
       },
       {
-        path: 'admin/view-schedule',
+        path: 'admin/schedule',
         element: <AdminSchedulePage />
       }
     ],
