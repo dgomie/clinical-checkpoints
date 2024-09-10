@@ -58,11 +58,11 @@ const DashboardComponent = () => {
       </Paper>
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography variant='h6'>Assigned Checkpoints</Typography>
+          <Typography variant='h6'>Assigned Check Points</Typography>
         </AccordionSummary>
         <AccordionDetails>
           {incompleteCheckpoints.length === 0 ? (
-            <Typography>All Checkpoints Complete</Typography>
+            <Typography>All Check Points Complete</Typography>
           ) : (
             <List>
               {incompleteCheckpoints.map((checkpoint) => (
@@ -95,11 +95,11 @@ const DashboardComponent = () => {
       </Accordion>
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography variant='h6'>Completed Checkpoints</Typography>
+          <Typography variant='h6'>Completed Check Points</Typography>
         </AccordionSummary>
         <AccordionDetails>
           {completedCheckpoints.length === 0 ? (
-            <Typography>No Checkpoints to display</Typography>
+            <Typography>No Check Points to Display</Typography>
           ) : (
             <List>
               {completedCheckpoints.map((checkpoint) => (

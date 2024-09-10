@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Paper,
   Button,
@@ -41,9 +41,9 @@ const AdminScheduleComponent = () => {
           assign,
         },
       });
-      setConfirmationMessage(`${selectedOffice} clinicians assigned checkpoint`);
+      setConfirmationMessage(`${selectedOffice} clinicians assigned check point`);
     } catch (error) {
-      console.error('Error updating checkpoints:', error);
+      console.error('Error updating check points:', error);
     }
   };
 
@@ -60,7 +60,7 @@ const AdminScheduleComponent = () => {
       >
         <Typography variant="h5">Schedule</Typography>
         <Button variant="contained" color="primary" onClick={handleOpen}>
-          Assign Checkpoint
+          Assign Check Point
         </Button>
       </Paper>
 
@@ -78,7 +78,7 @@ const AdminScheduleComponent = () => {
           }}
         >
           <Typography variant="h6" component="h2">
-            Assign Checkpoint
+            Assign Check Point
           </Typography>
           {confirmationMessage && (
             <Alert severity="success" sx={{ mt: 2 }}>
