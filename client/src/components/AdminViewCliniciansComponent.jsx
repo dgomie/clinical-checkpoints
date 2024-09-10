@@ -3,12 +3,12 @@ import { Paper, Container, List, ListItem, ListItemText, Accordion, AccordionSum
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useQuery, useMutation } from '@apollo/client';
 import { GET_USERS } from '../utils/queries';
-import { UPDATE_USER, REMOVE_USER } from '../utils/mutations';
+import { ADMIN_UPDATE_USER, REMOVE_USER } from '../utils/mutations';
 import Auth from '../utils/auth';
 
 const AdminViewCliniciansComponent = () => {
   const { loading, error, data, refetch } = useQuery(GET_USERS);
-  const [updateUser] = useMutation(UPDATE_USER);
+  const [updateUser] = useMutation(ADMIN_UPDATE_USER);
   const [removeUser] = useMutation(REMOVE_USER); 
   const currentUserId = Auth.getProfile().data._id;
 
@@ -72,9 +72,9 @@ const AdminViewCliniciansComponent = () => {
 
   const handleConfirmUpdate = async () => {
     try {
-      const { _id, firstName, lastName, email, officeLocation } = selectedUser;
+      const { _id, firstName, lastName, email, officeLocation, isAdmin } = selectedUser;
       await updateUser({
-        variables: { userId: _id, updateData: { firstName, lastName, email, officeLocation } },
+        variables: { userId: _id, updateData: { firstName, lastName, email, officeLocation, isAdmin } },
       });
       setSuccessMessage('User updated successfully!');
       setErrorMessage('');

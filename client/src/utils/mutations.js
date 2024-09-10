@@ -44,6 +44,15 @@ export const UPDATE_USER = gql`
   }
 `;
 
+export const ADMIN_UPDATE_USER = gql`
+  mutation adminUpdateUser($userId: ID!, $updateData: AdminUpdateUserInput!) {
+    adminUpdateUser(userId: $userId, updateData: $updateData) {
+      _id
+      email
+    }
+  }
+`;
+
 export const ADD_CHECKPOINT = gql`
   mutation AddCheckPoint($input: NewCheckPointInput!) {
     addCheckPoint(input: $input) {
