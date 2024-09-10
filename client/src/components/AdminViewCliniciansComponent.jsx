@@ -4,13 +4,11 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useQuery, useMutation } from '@apollo/client';
 import { GET_USERS } from '../utils/queries';
 import { ADMIN_UPDATE_USER, REMOVE_USER } from '../utils/mutations';
-import Auth from '../utils/auth';
 
 const AdminViewCliniciansComponent = () => {
   const { loading, error, data, refetch } = useQuery(GET_USERS);
   const [updateUser] = useMutation(ADMIN_UPDATE_USER);
   const [removeUser] = useMutation(REMOVE_USER); 
-  const currentUserId = Auth.getProfile().data._id;
 
   const [open, setOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false); 

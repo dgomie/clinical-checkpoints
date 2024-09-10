@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Paper,
   Button,
@@ -12,15 +12,16 @@ import {
   InputLabel,
   Alert,
   Grid,
-  useMediaQuery,
+  TextField,
 } from '@mui/material';
 import { useMutation } from '@apollo/client';
-import { UPDATE_CHECKPOINTS_BY_FOCUS_AREA } from '../utils/mutations';
+import { UPDATE_CHECKPOINTS_BY_FOCUS_AREA, UPDATE_DATE_AND_TIME } from '../utils/mutations';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 const localizer = momentLocalizer(moment);
+
 
 const AdminScheduleComponent = () => {
   const [open, setOpen] = useState(false);
@@ -28,7 +29,8 @@ const AdminScheduleComponent = () => {
   const [selectedFocusArea, setSelectedFocusArea] = useState('');
   const [assign, setAssign] = useState(true);
   const [confirmationMessage, setConfirmationMessage] = useState('');
-
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedTime, setSelectedTime] = useState('');
   const [events, setEvents] = useState([
     {
       title: 'Meeting with Team',
@@ -45,6 +47,7 @@ const AdminScheduleComponent = () => {
   const [updateCheckpointsByFocusArea] = useMutation(
     UPDATE_CHECKPOINTS_BY_FOCUS_AREA
   );
+  const [updateDateAndTime] = useMutation(UPDATE_DATE_AND_TIME);
 
   const handleOpen = () => {
     setOpen(true);
@@ -61,13 +64,17 @@ const AdminScheduleComponent = () => {
           assign,
         },
       });
+      await updateDateAndTime({
+        variables: {
+          date: selectedDate.toISOString().split('T')[0],
+          time: selectedTime,
+        },
+      });
       setConfirmationMessage(`${selectedOffice} clinicians assigned check point`);
     } catch (error) {
       console.error('Error updating check points:', error);
     }
   };
-
-
 
   return (
     <Container>
@@ -82,9 +89,11 @@ const AdminScheduleComponent = () => {
               gap: '1rem',
             }}
           >
-            <Typography variant="h5" sx={{textAlign: 'center'}}>Schedule Office Visits</Typography>
+            <Typography variant="h5" sx={{ textAlign: 'center' }}>
+              Schedule
+            </Typography>
             <Button variant="contained" color="primary" onClick={handleOpen}>
-              Assign Check Point
+              Schedule Office Visit
             </Button>
           </Paper>
         </Grid>
@@ -112,8 +121,8 @@ const AdminScheduleComponent = () => {
             p: 4,
           }}
         >
-          <Typography variant="h6" component="h2">
-            Assign Check Point
+          <Typography variant="h6" component="h2" sx={{textAlign: 'center'}}>
+            Schedule Office Visit
           </Typography>
           {confirmationMessage && (
             <Alert severity="success" sx={{ mt: 2 }}>
@@ -183,9 +192,33 @@ const AdminScheduleComponent = () => {
               </MenuItem>
             </Select>
           </FormControl>
+          <FormControl fullWidth sx={{ mt: 2 }}>
+            <TextField
+              id="date"
+              label="Date"
+              type="date"
+              value={selectedDate.toISOString().split('T')[0]}
+              onChange={(e) => setSelectedDate(new Date(e.target.value))}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+          </FormControl>
+          <FormControl fullWidth sx={{ mt: 2 }}>
+            <TextField
+              id="time"
+              label="Time"
+              type="time"
+              value={selectedTime}
+              onChange={(e) => setSelectedTime(e.target.value)}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+          </FormControl>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
             <Button variant="contained" color="primary" onClick={handleAssign}>
-              Assign
+              Schedule
             </Button>
             <Button variant="outlined" color="secondary" onClick={handleClose}>
               Cancel

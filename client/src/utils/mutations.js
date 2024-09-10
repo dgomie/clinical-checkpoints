@@ -100,4 +100,13 @@ export const UPDATE_CHECKPOINTS_BY_FOCUS_AREA = gql`
   }
 `;
 
+export const UPDATE_DATE_AND_TIME = gql`
+  mutation UpdateDateAndTime($date: String!, $time: String!) {
+    updateDateAndTime(date: $date, time: $time) {
+      success
+      message
+    }
+  }
+`;
+
 //UPDATE_USER_TASKS
