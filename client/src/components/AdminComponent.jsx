@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { Paper, Tabs, Tab, Container, Box, Button } from "@mui/material";
+import { useState } from 'react';
+import { Tabs, Tab, Container, Box, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import AdminViewCliniciansComponent from './AdminViewCliniciansComponent';
+import AdminViewAdminsComponent from './AdminViewAdminsComponent';
 
 const AdminComponent = () => {
   const [selectedTab, setSelectedTab] = useState(0);
@@ -37,7 +38,7 @@ const AdminComponent = () => {
             },
           }}
         >
-          <Tab label="View All Clinicians" />
+          <Tab label="Edit Users" />
           <Tab label="Schedule" />
         </Tabs>
         <Box sx={{ marginTop: '2rem' }}>
@@ -45,6 +46,7 @@ const AdminComponent = () => {
             <div>
               {/* Replace with your View All Clinicians component */}
              <AdminViewCliniciansComponent />
+             <AdminViewAdminsComponent />
             </div>
           )}
           {selectedTab === 1 && (
