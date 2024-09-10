@@ -23,7 +23,7 @@ const AdminViewCliniciansComponent = () => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
-  const users = data.users.filter(user => user._id !== currentUserId && user.isAdmin !== true);
+  const users = data.users.filter(user => user.isAdmin !== true);
 
   const groupedUsers = users.reduce((acc, user) => {
     const { officeLocation } = user;

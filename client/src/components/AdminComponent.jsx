@@ -39,19 +39,19 @@ const AdminComponent = () => {
           },
         }}
       >
-        <Tab label="Edit Users" />
         <Tab label="Schedule" />
+        <Tab label="Edit Users" />
       </Tabs>
       <Box sx={{ marginTop: '2rem' }}>
         {selectedTab === 0 && (
           <div>
-            <AdminViewCliniciansComponent />
-            <AdminViewAdminsComponent />
+            <AdminScheduleComponent />
           </div>
         )}
         {selectedTab === 1 && (
           <div>
-            <AdminScheduleComponent />
+            <AdminViewCliniciansComponent />
+            <AdminViewAdminsComponent />
           </div>
         )}
       </Box>

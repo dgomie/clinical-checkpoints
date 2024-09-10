@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import {
   Paper,
   Button,
@@ -11,9 +11,16 @@ import {
   FormControl,
   InputLabel,
   Alert,
+  Grid,
+  useMediaQuery,
 } from '@mui/material';
 import { useMutation } from '@apollo/client';
 import { UPDATE_CHECKPOINTS_BY_FOCUS_AREA } from '../utils/mutations';
+import { Calendar, momentLocalizer } from 'react-big-calendar';
+import moment from 'moment';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+
+const localizer = momentLocalizer(moment);
 
 const AdminScheduleComponent = () => {
   const [open, setOpen] = useState(false);
@@ -21,6 +28,19 @@ const AdminScheduleComponent = () => {
   const [selectedFocusArea, setSelectedFocusArea] = useState('');
   const [assign, setAssign] = useState(true);
   const [confirmationMessage, setConfirmationMessage] = useState('');
+
+  const [events, setEvents] = useState([
+    {
+      title: 'Meeting with Team',
+      start: new Date(2024, 8, 10, 10, 0), // October 10, 2023, 10:00 AM
+      end: new Date(2024, 8, 10, 11, 0), // October 10, 2023, 11:00 AM
+    },
+    {
+      title: 'Doctor Appointment',
+      start: new Date(2024, 8, 12, 14, 0), // October 12, 2023, 2:00 PM
+      end: new Date(2024, 8, 12, 15, 0), // October 12, 2023, 3:00 PM
+    },
+  ]);
 
   const [updateCheckpointsByFocusArea] = useMutation(
     UPDATE_CHECKPOINTS_BY_FOCUS_AREA
@@ -47,22 +67,37 @@ const AdminScheduleComponent = () => {
     }
   };
 
+
+
   return (
-    <Container sx={{ display: 'flex' }}>
-      <Paper
-        elevation={3}
-        sx={{
-          padding: '2rem',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '1rem',
-        }}
-      >
-        <Typography variant="h5">Schedule</Typography>
-        <Button variant="contained" color="primary" onClick={handleOpen}>
-          Assign Check Point
-        </Button>
-      </Paper>
+    <Container>
+      <Grid container spacing={2} direction={'column'}>
+        <Grid item xs={12} md={4}>
+          <Paper
+            elevation={3}
+            sx={{
+              padding: '2rem',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '1rem',
+            }}
+          >
+            <Typography variant="h5" sx={{textAlign: 'center'}}>Schedule Office Visits</Typography>
+            <Button variant="contained" color="primary" onClick={handleOpen}>
+              Assign Check Point
+            </Button>
+          </Paper>
+        </Grid>
+        <Grid item xs={12} md={8}>
+          <Calendar
+            localizer={localizer}
+            events={events}
+            startAccessor="start"
+            endAccessor="end"
+            style={{ height: 500 }}
+          />
+        </Grid>
+      </Grid>
 
       <Modal open={open} onClose={handleClose}>
         <Box
