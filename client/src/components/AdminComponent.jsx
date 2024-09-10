@@ -1,24 +1,61 @@
-import React from 'react';
-import { Paper, Button, Container } from "@mui/material";
+import React, { useState } from 'react';
+import { Paper, Tabs, Tab, Container, Box, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import AdminViewCliniciansComponent from './AdminViewCliniciansComponent';
 
 const AdminComponent = () => {
+  const [selectedTab, setSelectedTab] = useState(0);
   const navigate = useNavigate();
+
+  const handleTabChange = (event, newValue) => {
+    setSelectedTab(newValue);
+  };
 
   const handleNavigation = (path) => {
     navigate(path);
   };
 
   return (
-    <Container sx={{ display: 'flex'}}>
-      <Paper elevation={3} sx={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        <Button variant="contained" onClick={() => handleNavigation('/admin/view-clinicians')}>
-          View All Clinicians
-        </Button>
-        <Button variant="contained" onClick={() => handleNavigation('/admin/schedule')}>
-          Schedule
-        </Button>
-      </Paper>
+    <Container sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: "10px" }}>
+    
+        <Tabs
+          value={selectedTab}
+          onChange={handleTabChange}
+          centered
+          scrollButtons="auto"
+          sx={{
+            '& .MuiTabs-indicator': {
+              backgroundColor: '#1976d2',
+            },
+            '& .MuiTab-root': {
+              textTransform: 'none',
+              fontWeight: 'bold',
+              fontSize: '1rem',
+              '&.Mui-selected': {
+                color: '#1976d2',
+              },
+            },
+          }}
+        >
+          <Tab label="View All Clinicians" />
+          <Tab label="Schedule" />
+        </Tabs>
+        <Box sx={{ marginTop: '2rem' }}>
+          {selectedTab === 0 && (
+            <div>
+              {/* Replace with your View All Clinicians component */}
+             <AdminViewCliniciansComponent />
+            </div>
+          )}
+          {selectedTab === 1 && (
+            <div>
+              {/* Replace with your Schedule component */}
+              <Button variant="contained" onClick={() => handleNavigation('/admin/schedule')}>
+                Schedule
+              </Button>
+            </div>
+          )}
+        </Box>
     </Container>
   );
 };

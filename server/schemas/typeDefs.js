@@ -52,6 +52,14 @@ const typeDefs = `
     officeLocation: String
   }
 
+   input AdminUpdateUserInput {
+    firstName: String
+    lastName: String
+    email: String
+    officeLocation: String
+    isAdmin: Boolean
+  }
+
   input NewTaskInput {
     description: String
     taskCompleted: Boolean
@@ -74,6 +82,7 @@ const typeDefs = `
     login(email: String!, password: String!): Auth
     removeUser(userId: ID!): User
     updateUser(userId: ID!, updateData: UpdateUserInput!): User
+    adminUpdateUser(userId: ID!, updateData: AdminUpdateUserInput!): User
     addCheckPoint(input: NewCheckPointInput!): CheckPoint
     updateCheckPoint(checkPointId: ID!, updateData: UpdateCheckPointInput!): CheckPoint
   }

@@ -91,6 +91,15 @@ const resolvers = {
       return updatedUser;
     },
 
+    adminUpdateUser: async (_, { userId, updateData }) => {
+      const updatedUser = await User.findOneAndUpdate(
+        { _id: userId },
+        updateData,
+        { new: true }
+      );
+      return updatedUser;
+    },
+
     addCheckPoint: async (parent, { input }) => {
       const checkPoint = await CheckPoint.create(input);
       return checkPoint;
