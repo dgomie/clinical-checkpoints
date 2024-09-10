@@ -161,6 +161,28 @@ const resolvers = {
       await checkPoint.save();
       return checkPoint;
     },
+
+    updateCheckpointsByFocusArea: async (_, { focusArea, officeLocation, assign }) => {
+      try {
+        // Find all checkpoints with the specified focus area
+        const checkpoints = await CheckPoint.find({ focusArea });
+
+        // Filter checkpoints by user office location
+        const updatedCheckpoints = [];
+        for (const checkpoint of checkpoints) {
+          const user = await User.findById(checkpoint.userId);
+          if (user && user.officeLocation === officeLocation) {
+            checkpoint.checkpointAssigned = assign;
+            await checkpoint.save();
+            updatedCheckpoints.push(checkpoint);
+          }
+        }
+
+        return updatedCheckpoints;
+      } catch (error) {
+        throw new Error('Failed to update checkpoints.');
+      }
+    },
   },
 };
 

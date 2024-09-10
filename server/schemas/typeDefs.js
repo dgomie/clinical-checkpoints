@@ -87,6 +87,7 @@ const typeDefs = `
     adminUpdateUser(userId: ID!, updateData: AdminUpdateUserInput!): User
     addCheckPoint(input: NewCheckPointInput!): CheckPoint
     updateCheckPoint(checkPointId: ID!, updateData: UpdateCheckPointInput!): CheckPoint
+    updateCheckpointsByFocusArea(focusArea: String!, officeLocation: String!, assign: Boolean!): [CheckPoint]
   }
 `;
 

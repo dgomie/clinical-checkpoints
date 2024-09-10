@@ -87,3 +87,17 @@ export const UPDATE_CHECKPOINT = gql`
     }
   }
 `;
+
+export const UPDATE_CHECKPOINTS_BY_FOCUS_AREA = gql`
+  mutation UpdateCheckpointsByFocusArea($focusArea: String!, $officeLocation: String!, $assign: Boolean!) {
+    updateCheckpointsByFocusArea(focusArea: $focusArea, officeLocation: $officeLocation, assign: $assign) {
+      id
+      focusArea
+      checkpointAssigned
+      checkpointCompleted
+      userId
+    }
+  }
+`;
+
+//UPDATE_USER_TASKS
