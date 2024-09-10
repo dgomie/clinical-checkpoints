@@ -26,6 +26,7 @@ const typeDefs = `
     tasks: [Task]
     createdAt: String
     completedAt: String
+    checkpointAssigned: Boolean!
     checkpointCompleted: Boolean!
   }
 
@@ -75,6 +76,7 @@ const typeDefs = `
     focusArea: String
     tasks: [NewTaskInput]
     completedAt: String
+    checkpointAssigned: Boolean
   }
 
   type Mutation {

@@ -82,6 +82,7 @@ export const UPDATE_CHECKPOINT = gql`
       }
       createdAt
       completedAt
+      checkpointAssigned
       checkpointCompleted
     }
   }

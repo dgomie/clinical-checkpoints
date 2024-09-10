@@ -43,7 +43,7 @@ const DashboardComponent = () => {
   const userFirstName = userData?.userById?.firstName;
   const checkpoints = checkpointsData?.checkPoints || [];
 
-  const incompleteCheckpoints = checkpoints.filter(cp => !cp.checkpointCompleted);
+  const incompleteCheckpoints = checkpoints.filter(cp => !cp.checkpointCompleted && cp.checkpointAssigned);
   const completedCheckpoints = checkpoints.filter(cp => cp.checkpointCompleted);
 
   return (
