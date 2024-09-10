@@ -26,6 +26,7 @@ const typeDefs = `
     tasks: [Task]
     createdAt: String
     completedAt: String
+    checkpointAssigned: Boolean!
     checkpointCompleted: Boolean!
   }
 
@@ -75,6 +76,7 @@ const typeDefs = `
     focusArea: String
     tasks: [NewTaskInput]
     completedAt: String
+    checkpointAssigned: Boolean
   }
 
   type Mutation {
@@ -85,6 +87,7 @@ const typeDefs = `
     adminUpdateUser(userId: ID!, updateData: AdminUpdateUserInput!): User
     addCheckPoint(input: NewCheckPointInput!): CheckPoint
     updateCheckPoint(checkPointId: ID!, updateData: UpdateCheckPointInput!): CheckPoint
+    updateCheckpointsByFocusArea(focusArea: String!, officeLocation: String!, assign: Boolean!): [CheckPoint]
   }
 `;
 

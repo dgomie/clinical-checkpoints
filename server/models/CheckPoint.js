@@ -18,6 +18,7 @@ const CheckPointSchema = new Schema(
       required: true,
       default: Date.now,
     },
+    checkpointAssigned: { type: Boolean, default: false },
     checkpointCompleted: { type: Boolean, default: false },
     completedAt: {
       type: Date,

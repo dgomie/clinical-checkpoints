@@ -5,10 +5,12 @@ import { useQuery, useMutation } from '@apollo/client';
 import { GET_USERS } from '../utils/queries';
 import { ADMIN_UPDATE_USER, REMOVE_USER } from '../utils/mutations';
 
-const AdminViewCliniciansComponent = () => {
+
+const AdminViewAdminsComponent = () => {
   const { loading, error, data, refetch } = useQuery(GET_USERS);
   const [updateUser] = useMutation(ADMIN_UPDATE_USER);
   const [removeUser] = useMutation(REMOVE_USER); 
+
 
   const [open, setOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false); 
@@ -21,7 +23,7 @@ const AdminViewCliniciansComponent = () => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
-  const users = data.users.filter(user => user.isAdmin !== true);
+  const users = data.users.filter(user => user.isAdmin !== false);
 
   const groupedUsers = users.reduce((acc, user) => {
     const { officeLocation } = user;
@@ -113,9 +115,9 @@ const AdminViewCliniciansComponent = () => {
   };
 
   return (
-    <Container sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      <Paper elevation={3} sx={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem', textAlign: 'center' }}>
-        <Typography variant='h5'>Clinicians</Typography>
+    <Container sx={{ display: 'flex', flexDirection: 'column', gap: '1rem', my: '1rem' }}>
+      <Paper elevation={3} sx={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem', textAlign: 'center'}}>
+        <Typography variant='h5'>Admin Users</Typography>
       </Paper>
 
       {Object.keys(groupedUsers).sort().map(location => (
@@ -237,4 +239,4 @@ const AdminViewCliniciansComponent = () => {
   );
 };
 
-export default AdminViewCliniciansComponent;
+export default AdminViewAdminsComponent;

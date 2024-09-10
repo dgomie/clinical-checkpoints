@@ -44,6 +44,7 @@ export const CHECKPOINTS_QUERY = gql`
     checkPoints(userId: $userId) {
       id
       focusArea
+      checkpointAssigned
       checkpointCompleted
       tasks {
         description
