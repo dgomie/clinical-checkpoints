@@ -34,6 +34,15 @@ const resolvers = {
     checkPoint: async (parent, { id }) => {
       return await CheckPoint.findById(id);
     },
+
+    getCheckpointsByUser: async (_, { userId }) => {
+      try {
+        const checkpoints = await CheckPoint.find({ userId });
+        return checkpoints;
+      } catch (error) {
+        throw new Error('Failed to fetch checkpoints.');
+      }
+    },
   },
 
   Mutation: {

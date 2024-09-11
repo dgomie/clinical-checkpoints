@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Paper,
   Button,
@@ -12,27 +12,43 @@ import {
   InputLabel,
   Alert,
   Grid,
+  TextField,
 } from '@mui/material';
-import { useMutation } from '@apollo/client';
-import { UPDATE_CHECKPOINTS_BY_FOCUS_AREA } from '../utils/mutations';
+import { useQuery, useMutation } from '@apollo/client';
+import { GET_USERS, GET_CHECKPOINTS_BY_USER } from '../utils/queries';
+import { UPDATE_CHECKPOINTS_BY_FOCUS_AREA, ADD_TASK_TO_CHECKPOINT } from '../utils/mutations';
 
 const AdminScheduleComponent = () => {
   const [open, setOpen] = useState(false);
   const [selectedOffice, setSelectedOffice] = useState('');
   const [selectedFocusArea, setSelectedFocusArea] = useState('');
+  const [selectedUser, setSelectedUser] = useState('');
+  const [selectedCheckpoint, setSelectedCheckpoint] = useState('');
+  const [taskDescription, setTaskDescription] = useState('');
   const [assign] = useState(true);
   const [confirmationMessage, setConfirmationMessage] = useState('');
 
-  const [updateCheckpointsByFocusArea] = useMutation(
-    UPDATE_CHECKPOINTS_BY_FOCUS_AREA
-  );
+  const { data: usersData } = useQuery(GET_USERS);
+  const { data: checkpointsData, refetch: refetchCheckpoints } = useQuery(GET_CHECKPOINTS_BY_USER, {
+    variables: { userId: selectedUser },
+    skip: !selectedUser,
+  });
 
+  const [updateCheckpointsByFocusArea] = useMutation(UPDATE_CHECKPOINTS_BY_FOCUS_AREA);
+  const [addTaskToCheckPoint] = useMutation(ADD_TASK_TO_CHECKPOINT);
 
   const handleOpen = () => {
     setOpen(true);
     setConfirmationMessage('');
   };
-  const handleClose = () => setOpen(false);
+
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedUser('');
+    setSelectedCheckpoint('');
+    setTaskDescription('');
+    setConfirmationMessage('');
+  };
 
   const handleAssign = async () => {
     try {
@@ -49,6 +65,29 @@ const AdminScheduleComponent = () => {
     }
   };
 
+  const handleAddTask = async () => {
+    try {
+      await addTaskToCheckPoint({
+        variables: {
+          userId: selectedUser,
+          focusArea: selectedCheckpoint,
+          description: taskDescription,
+        },
+      });
+      setConfirmationMessage('Task added successfully');
+      setSelectedUser('');
+      setSelectedCheckpoint('');
+      setTaskDescription('');
+    } catch (error) {
+      console.error('Error adding task:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedUser) {
+      refetchCheckpoints();
+    }
+  }, [selectedUser, refetchCheckpoints]);
 
   return (
     <Container>
@@ -66,10 +105,9 @@ const AdminScheduleComponent = () => {
             <Button variant="contained" color="primary" onClick={handleOpen}>
               Assign Check Points
             </Button>
-            <Button variant="contained" color="primary">
+            <Button variant="contained" color="primary" onClick={handleOpen}>
               Update Clinician Tasks
             </Button>
-  
           </Paper>
         </Grid>
       </Grid>
@@ -87,7 +125,7 @@ const AdminScheduleComponent = () => {
             p: 4,
           }}
         >
-          <Typography variant="h6" component="h2" sx={{textAlign: 'center'}}>
+          <Typography variant="h6" component="h2" sx={{ textAlign: 'center' }}>
             Schedule Office Visit
           </Typography>
           {confirmationMessage && (
@@ -158,7 +196,7 @@ const AdminScheduleComponent = () => {
               </MenuItem>
             </Select>
           </FormControl>
-    
+
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
             <Button variant="contained" color="primary" onClick={handleAssign}>
               Assign
@@ -170,6 +208,74 @@ const AdminScheduleComponent = () => {
         </Box>
       </Modal>
 
+      <Modal open={open} onClose={handleClose}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 400,
+            bgcolor: 'background.paper',
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Typography variant="h6" component="h2" sx={{ textAlign: 'center' }}>
+            Add Task to CheckPoint
+          </Typography>
+          {confirmationMessage && (
+            <Alert severity="success" sx={{ mt: 2 }}>
+              {confirmationMessage}
+            </Alert>
+          )}
+          <FormControl fullWidth sx={{ mt: 2 }}>
+            <InputLabel id="user-select-label">User</InputLabel>
+            <Select
+              labelId="user-select-label"
+              value={selectedUser}
+              onChange={(e) => setSelectedUser(e.target.value)}
+              label="User"
+            >
+              {usersData?.users.map((user) => (
+                <MenuItem key={user.id} value={user.id}>
+                  {user.firstName} {user.lastName}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl fullWidth sx={{ mt: 2 }}>
+            <InputLabel id="checkpoint-select-label">CheckPoint</InputLabel>
+            <Select
+              labelId="checkpoint-select-label"
+              value={selectedCheckpoint}
+              onChange={(e) => setSelectedCheckpoint(e.target.value)}
+              label="CheckPoint"
+            >
+              {checkpointsData?.checkPoints.map((checkpoint) => (
+                <MenuItem key={checkpoint.id} value={checkpoint.focusArea}>
+                  {checkpoint.focusArea}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <TextField
+            fullWidth
+            sx={{ mt: 2 }}
+            label="Task"
+            value={taskDescription}
+            onChange={(e) => setTaskDescription(e.target.value)}
+          />
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+            <Button variant="contained" color="primary" onClick={handleAddTask}>
+              Add Task
+            </Button>
+            <Button variant="outlined" color="secondary" onClick={handleClose}>
+              Cancel
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
     </Container>
   );
 };

@@ -71,3 +71,12 @@ export const CHECKPOINT_QUERY = gql`
     }
   }
 `;
+
+export const GET_CHECKPOINTS_BY_USER = gql`
+  query GetCheckpointsByUser($userId: ID!) {
+    checkPoints(userId: $userId) {
+      id
+      focusArea
+    }
+  }
+`;

@@ -36,6 +36,7 @@ const typeDefs = `
     userById(id: ID!): User
     checkPoints(userId: ID!): [CheckPoint!]!
     checkPoint(id: ID!): CheckPoint
+    getCheckpointsByUser(userId: ID!): [CheckPoint]
   }
 
   input NewUserInput {
