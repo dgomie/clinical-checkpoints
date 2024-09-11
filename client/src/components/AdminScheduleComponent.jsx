@@ -20,7 +20,7 @@ const AdminScheduleComponent = () => {
   const [open, setOpen] = useState(false);
   const [selectedOffice, setSelectedOffice] = useState('');
   const [selectedFocusArea, setSelectedFocusArea] = useState('');
-  const [assign, setAssign] = useState(true);
+  const [assign] = useState(true);
   const [confirmationMessage, setConfirmationMessage] = useState('');
 
   const [updateCheckpointsByFocusArea] = useMutation(
