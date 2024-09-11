@@ -63,11 +63,11 @@ const AdminScheduleComponent = () => {
               gap: '1rem',
             }}
           >
-            <Typography variant="h5" sx={{ textAlign: 'center' }}>
-              Schedule
-            </Typography>
             <Button variant="contained" color="primary" onClick={handleOpen}>
               Assign Check Points
+            </Button>
+            <Button variant="contained" color="primary">
+              Update Clinician Tasks
             </Button>
   
           </Paper>
