@@ -238,19 +238,19 @@ const AdminScheduleComponent = () => {
               label="User"
             >
               {usersData?.users.map((user) => (
-                <MenuItem key={user.id} value={user.id}>
+                <MenuItem key={user._id} value={user._id}>
                   {user.firstName} {user.lastName}
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
           <FormControl fullWidth sx={{ mt: 2 }}>
-            <InputLabel id="checkpoint-select-label">CheckPoint</InputLabel>
+            <InputLabel id="checkpoint-select-label">Check Point</InputLabel>
             <Select
               labelId="checkpoint-select-label"
               value={selectedCheckpoint}
               onChange={(e) => setSelectedCheckpoint(e.target.value)}
-              label="CheckPoint"
+              label="Check Point"
             >
               {checkpointsData?.checkPoints.map((checkpoint) => (
                 <MenuItem key={checkpoint.id} value={checkpoint.focusArea}>
