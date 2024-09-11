@@ -183,6 +183,22 @@ const resolvers = {
         throw new Error('Failed to update checkpoints.');
       }
     },
+    addTaskToCheckPoint: async (_, { userId, focusArea, description }) => {
+      try {
+        const checkPoint = await CheckPoint.findOne({ userId, focusArea });
+        if (!checkPoint) {
+          throw new Error('CheckPoint not found');
+        }
+
+        const newTask = { description, taskCompleted: false };
+        checkPoint.tasks.push(newTask);
+        await checkPoint.save();
+
+        return checkPoint;
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
   },
 };
 
