@@ -12,16 +12,9 @@ import {
   InputLabel,
   Alert,
   Grid,
-  TextField,
 } from '@mui/material';
 import { useMutation } from '@apollo/client';
-import { UPDATE_CHECKPOINTS_BY_FOCUS_AREA, UPDATE_DATE_AND_TIME } from '../utils/mutations';
-import { Calendar, momentLocalizer } from 'react-big-calendar';
-import moment from 'moment';
-import 'react-big-calendar/lib/css/react-big-calendar.css';
-
-const localizer = momentLocalizer(moment);
-
+import { UPDATE_CHECKPOINTS_BY_FOCUS_AREA } from '../utils/mutations';
 
 const AdminScheduleComponent = () => {
   const [open, setOpen] = useState(false);
@@ -29,25 +22,11 @@ const AdminScheduleComponent = () => {
   const [selectedFocusArea, setSelectedFocusArea] = useState('');
   const [assign, setAssign] = useState(true);
   const [confirmationMessage, setConfirmationMessage] = useState('');
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedTime, setSelectedTime] = useState('');
-  const [events, setEvents] = useState([
-    {
-      title: 'Meeting with Team',
-      start: new Date(2024, 8, 10, 10, 0), // October 10, 2023, 10:00 AM
-      end: new Date(2024, 8, 10, 11, 0), // October 10, 2023, 11:00 AM
-    },
-    {
-      title: 'Doctor Appointment',
-      start: new Date(2024, 8, 12, 14, 0), // October 12, 2023, 2:00 PM
-      end: new Date(2024, 8, 12, 15, 0), // October 12, 2023, 3:00 PM
-    },
-  ]);
 
   const [updateCheckpointsByFocusArea] = useMutation(
     UPDATE_CHECKPOINTS_BY_FOCUS_AREA
   );
-  const [updateDateAndTime] = useMutation(UPDATE_DATE_AND_TIME);
+
 
   const handleOpen = () => {
     setOpen(true);
@@ -64,17 +43,12 @@ const AdminScheduleComponent = () => {
           assign,
         },
       });
-      await updateDateAndTime({
-        variables: {
-          date: selectedDate.toISOString().split('T')[0],
-          time: selectedTime,
-        },
-      });
       setConfirmationMessage(`${selectedOffice} clinicians assigned check point`);
     } catch (error) {
       console.error('Error updating check points:', error);
     }
   };
+
 
   return (
     <Container>
@@ -93,18 +67,10 @@ const AdminScheduleComponent = () => {
               Schedule
             </Typography>
             <Button variant="contained" color="primary" onClick={handleOpen}>
-              Schedule Office Visit
+              Assign Check Points
             </Button>
+  
           </Paper>
-        </Grid>
-        <Grid item xs={12} md={8}>
-          <Calendar
-            localizer={localizer}
-            events={events}
-            startAccessor="start"
-            endAccessor="end"
-            style={{ height: 500 }}
-          />
         </Grid>
       </Grid>
 
@@ -192,33 +158,10 @@ const AdminScheduleComponent = () => {
               </MenuItem>
             </Select>
           </FormControl>
-          <FormControl fullWidth sx={{ mt: 2 }}>
-            <TextField
-              id="date"
-              label="Date"
-              type="date"
-              value={selectedDate.toISOString().split('T')[0]}
-              onChange={(e) => setSelectedDate(new Date(e.target.value))}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-          </FormControl>
-          <FormControl fullWidth sx={{ mt: 2 }}>
-            <TextField
-              id="time"
-              label="Time"
-              type="time"
-              value={selectedTime}
-              onChange={(e) => setSelectedTime(e.target.value)}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-          </FormControl>
+    
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
             <Button variant="contained" color="primary" onClick={handleAssign}>
-              Schedule
+              Assign
             </Button>
             <Button variant="outlined" color="secondary" onClick={handleClose}>
               Cancel
@@ -226,6 +169,7 @@ const AdminScheduleComponent = () => {
           </Box>
         </Box>
       </Modal>
+
     </Container>
   );
 };
