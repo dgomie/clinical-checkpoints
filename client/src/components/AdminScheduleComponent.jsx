@@ -19,7 +19,7 @@ import { GET_USERS, GET_CHECKPOINTS_BY_USER } from '../utils/queries';
 import { UPDATE_CHECKPOINTS_BY_FOCUS_AREA, ADD_TASK_TO_CHECKPOINT } from '../utils/mutations';
 
 const AdminScheduleComponent = () => {
-  const [open, setOpen] = useState(false);
+  const [openModal, setOpenModal] = useState(null); // Track which modal is open
   const [selectedOffice, setSelectedOffice] = useState('');
   const [selectedFocusArea, setSelectedFocusArea] = useState('');
   const [selectedUser, setSelectedUser] = useState('');
@@ -37,13 +37,13 @@ const AdminScheduleComponent = () => {
   const [updateCheckpointsByFocusArea] = useMutation(UPDATE_CHECKPOINTS_BY_FOCUS_AREA);
   const [addTaskToCheckPoint] = useMutation(ADD_TASK_TO_CHECKPOINT);
 
-  const handleOpen = () => {
-    setOpen(true);
+  const handleOpen = (modalType) => {
+    setOpenModal(modalType);
     setConfirmationMessage('');
   };
 
   const handleClose = () => {
-    setOpen(false);
+    setOpenModal(null);
     setSelectedUser('');
     setSelectedCheckpoint('');
     setTaskDescription('');
@@ -102,17 +102,17 @@ const AdminScheduleComponent = () => {
               gap: '1rem',
             }}
           >
-            <Button variant="contained" color="primary" onClick={handleOpen}>
+            <Button variant="contained" color="primary" onClick={() => handleOpen('assign')}>
               Assign Check Points
             </Button>
-            <Button variant="contained" color="primary" onClick={handleOpen}>
+            <Button variant="contained" color="primary" onClick={() => handleOpen('update')}>
               Update Clinician Tasks
             </Button>
           </Paper>
         </Grid>
       </Grid>
 
-      <Modal open={open} onClose={handleClose}>
+      <Modal open={openModal === 'assign'} onClose={handleClose}>
         <Box
           sx={{
             position: 'absolute',
@@ -208,7 +208,7 @@ const AdminScheduleComponent = () => {
         </Box>
       </Modal>
 
-      <Modal open={open} onClose={handleClose}>
+      <Modal open={openModal === 'update'} onClose={handleClose}>
         <Box
           sx={{
             position: 'absolute',
@@ -252,11 +252,14 @@ const AdminScheduleComponent = () => {
               onChange={(e) => setSelectedCheckpoint(e.target.value)}
               label="Check Point"
             >
-              {checkpointsData?.checkPoints.map((checkpoint) => (
-                <MenuItem key={checkpoint.id} value={checkpoint.focusArea}>
-                  {checkpoint.focusArea}
-                </MenuItem>
-              ))}
+              {checkpointsData?.checkPoints
+                .slice()
+                .sort((a, b) => a.focusArea.localeCompare(b.focusArea))
+                .map((checkpoint) => (
+                  <MenuItem key={checkpoint.id} value={checkpoint.focusArea}>
+                    {checkpoint.focusArea}
+                  </MenuItem>
+                ))}
             </Select>
           </FormControl>
           <TextField
