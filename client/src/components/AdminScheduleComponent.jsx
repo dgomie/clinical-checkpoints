@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Paper,
   Button,
@@ -14,46 +14,41 @@ import {
   Grid,
   TextField,
 } from '@mui/material';
-import { useMutation } from '@apollo/client';
-import { UPDATE_CHECKPOINTS_BY_FOCUS_AREA, UPDATE_DATE_AND_TIME } from '../utils/mutations';
-import { Calendar, momentLocalizer } from 'react-big-calendar';
-import moment from 'moment';
-import 'react-big-calendar/lib/css/react-big-calendar.css';
-
-const localizer = momentLocalizer(moment);
-
+import { useQuery, useMutation } from '@apollo/client';
+import { GET_USERS, GET_CHECKPOINTS_BY_USER } from '../utils/queries';
+import { UPDATE_CHECKPOINTS_BY_FOCUS_AREA, ADD_TASK_TO_CHECKPOINT } from '../utils/mutations';
 
 const AdminScheduleComponent = () => {
-  const [open, setOpen] = useState(false);
+  const [openModal, setOpenModal] = useState(null); // Track which modal is open
   const [selectedOffice, setSelectedOffice] = useState('');
   const [selectedFocusArea, setSelectedFocusArea] = useState('');
-  const [assign, setAssign] = useState(true);
+  const [selectedUser, setSelectedUser] = useState('');
+  const [selectedCheckpoint, setSelectedCheckpoint] = useState('');
+  const [taskDescription, setTaskDescription] = useState('');
+  const [assign] = useState(true);
   const [confirmationMessage, setConfirmationMessage] = useState('');
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedTime, setSelectedTime] = useState('');
-  const [events, setEvents] = useState([
-    {
-      title: 'Meeting with Team',
-      start: new Date(2024, 8, 10, 10, 0), // October 10, 2023, 10:00 AM
-      end: new Date(2024, 8, 10, 11, 0), // October 10, 2023, 11:00 AM
-    },
-    {
-      title: 'Doctor Appointment',
-      start: new Date(2024, 8, 12, 14, 0), // October 12, 2023, 2:00 PM
-      end: new Date(2024, 8, 12, 15, 0), // October 12, 2023, 3:00 PM
-    },
-  ]);
 
-  const [updateCheckpointsByFocusArea] = useMutation(
-    UPDATE_CHECKPOINTS_BY_FOCUS_AREA
-  );
-  const [updateDateAndTime] = useMutation(UPDATE_DATE_AND_TIME);
+  const { data: usersData } = useQuery(GET_USERS);
+  const { data: checkpointsData, refetch: refetchCheckpoints } = useQuery(GET_CHECKPOINTS_BY_USER, {
+    variables: { userId: selectedUser },
+    skip: !selectedUser,
+  });
 
-  const handleOpen = () => {
-    setOpen(true);
+  const [updateCheckpointsByFocusArea] = useMutation(UPDATE_CHECKPOINTS_BY_FOCUS_AREA);
+  const [addTaskToCheckPoint] = useMutation(ADD_TASK_TO_CHECKPOINT);
+
+  const handleOpen = (modalType) => {
+    setOpenModal(modalType);
     setConfirmationMessage('');
   };
-  const handleClose = () => setOpen(false);
+
+  const handleClose = () => {
+    setOpenModal(null);
+    setSelectedUser('');
+    setSelectedCheckpoint('');
+    setTaskDescription('');
+    setConfirmationMessage('');
+  };
 
   const handleAssign = async () => {
     try {
@@ -64,17 +59,35 @@ const AdminScheduleComponent = () => {
           assign,
         },
       });
-      await updateDateAndTime({
-        variables: {
-          date: selectedDate.toISOString().split('T')[0],
-          time: selectedTime,
-        },
-      });
       setConfirmationMessage(`${selectedOffice} clinicians assigned check point`);
     } catch (error) {
       console.error('Error updating check points:', error);
     }
   };
+
+  const handleAddTask = async () => {
+    try {
+      await addTaskToCheckPoint({
+        variables: {
+          userId: selectedUser,
+          focusArea: selectedCheckpoint,
+          description: taskDescription,
+        },
+      });
+      setConfirmationMessage('Task added successfully');
+      setSelectedUser('');
+      setSelectedCheckpoint('');
+      setTaskDescription('');
+    } catch (error) {
+      console.error('Error adding task:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedUser) {
+      refetchCheckpoints();
+    }
+  }, [selectedUser, refetchCheckpoints]);
 
   return (
     <Container>
@@ -89,26 +102,17 @@ const AdminScheduleComponent = () => {
               gap: '1rem',
             }}
           >
-            <Typography variant="h5" sx={{ textAlign: 'center' }}>
-              Schedule
-            </Typography>
-            <Button variant="contained" color="primary" onClick={handleOpen}>
-              Schedule Office Visit
+            <Button variant="contained" color="primary" onClick={() => handleOpen('assign')}>
+              Assign Check Points
+            </Button>
+            <Button variant="contained" color="primary" onClick={() => handleOpen('update')}>
+              Update Clinician Tasks
             </Button>
           </Paper>
         </Grid>
-        <Grid item xs={12} md={8}>
-          <Calendar
-            localizer={localizer}
-            events={events}
-            startAccessor="start"
-            endAccessor="end"
-            style={{ height: 500 }}
-          />
-        </Grid>
       </Grid>
 
-      <Modal open={open} onClose={handleClose}>
+      <Modal open={openModal === 'assign'} onClose={handleClose}>
         <Box
           sx={{
             position: 'absolute',
@@ -121,7 +125,7 @@ const AdminScheduleComponent = () => {
             p: 4,
           }}
         >
-          <Typography variant="h6" component="h2" sx={{textAlign: 'center'}}>
+          <Typography variant="h6" component="h2" sx={{ textAlign: 'center' }}>
             Schedule Office Visit
           </Typography>
           {confirmationMessage && (
@@ -192,33 +196,82 @@ const AdminScheduleComponent = () => {
               </MenuItem>
             </Select>
           </FormControl>
-          <FormControl fullWidth sx={{ mt: 2 }}>
-            <TextField
-              id="date"
-              label="Date"
-              type="date"
-              value={selectedDate.toISOString().split('T')[0]}
-              onChange={(e) => setSelectedDate(new Date(e.target.value))}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-          </FormControl>
-          <FormControl fullWidth sx={{ mt: 2 }}>
-            <TextField
-              id="time"
-              label="Time"
-              type="time"
-              value={selectedTime}
-              onChange={(e) => setSelectedTime(e.target.value)}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-          </FormControl>
+
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
             <Button variant="contained" color="primary" onClick={handleAssign}>
-              Schedule
+              Assign
+            </Button>
+            <Button variant="outlined" color="secondary" onClick={handleClose}>
+              Cancel
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
+
+      <Modal open={openModal === 'update'} onClose={handleClose}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 400,
+            bgcolor: 'background.paper',
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Typography variant="h6" component="h2" sx={{ textAlign: 'center' }}>
+            Add Task to CheckPoint
+          </Typography>
+          {confirmationMessage && (
+            <Alert severity="success" sx={{ mt: 2 }}>
+              {confirmationMessage}
+            </Alert>
+          )}
+          <FormControl fullWidth sx={{ mt: 2 }}>
+            <InputLabel id="user-select-label">User</InputLabel>
+            <Select
+              labelId="user-select-label"
+              value={selectedUser}
+              onChange={(e) => setSelectedUser(e.target.value)}
+              label="User"
+            >
+              {usersData?.users.map((user) => (
+                <MenuItem key={user._id} value={user._id}>
+                  {user.firstName} {user.lastName}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl fullWidth sx={{ mt: 2 }}>
+            <InputLabel id="checkpoint-select-label">Check Point</InputLabel>
+            <Select
+              labelId="checkpoint-select-label"
+              value={selectedCheckpoint}
+              onChange={(e) => setSelectedCheckpoint(e.target.value)}
+              label="Check Point"
+            >
+              {checkpointsData?.checkPoints
+                .slice()
+                .sort((a, b) => a.focusArea.localeCompare(b.focusArea))
+                .map((checkpoint) => (
+                  <MenuItem key={checkpoint.id} value={checkpoint.focusArea}>
+                    {checkpoint.focusArea}
+                  </MenuItem>
+                ))}
+            </Select>
+          </FormControl>
+          <TextField
+            fullWidth
+            sx={{ mt: 2 }}
+            label="Task"
+            value={taskDescription}
+            onChange={(e) => setTaskDescription(e.target.value)}
+          />
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+            <Button variant="contained" color="primary" onClick={handleAddTask}>
+              Add Task
             </Button>
             <Button variant="outlined" color="secondary" onClick={handleClose}>
               Cancel

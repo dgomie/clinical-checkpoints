@@ -109,4 +109,18 @@ export const UPDATE_DATE_AND_TIME = gql`
   }
 `;
 
+export const ADD_TASK_TO_CHECKPOINT = gql`
+  mutation AddTaskToCheckPoint($userId: ID!, $focusArea: String!, $description: String!) {
+    addTaskToCheckPoint(userId: $userId, focusArea: $focusArea, description: $description) {
+      checkpointAssigned
+      tasks {
+        description
+        taskCompleted
+      }
+      id
+      userId
+    }
+  }
+`;
+
 //UPDATE_USER_TASKS

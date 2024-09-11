@@ -36,6 +36,7 @@ const typeDefs = `
     userById(id: ID!): User
     checkPoints(userId: ID!): [CheckPoint!]!
     checkPoint(id: ID!): CheckPoint
+    getCheckpointsByUser(userId: ID!): [CheckPoint]
   }
 
   input NewUserInput {
@@ -88,6 +89,7 @@ const typeDefs = `
     addCheckPoint(input: NewCheckPointInput!): CheckPoint
     updateCheckPoint(checkPointId: ID!, updateData: UpdateCheckPointInput!): CheckPoint
     updateCheckpointsByFocusArea(focusArea: String!, officeLocation: String!, assign: Boolean!): [CheckPoint]
+    addTaskToCheckPoint(userId: ID!, focusArea: String!, description: String!): CheckPoint
   }
 `;
 

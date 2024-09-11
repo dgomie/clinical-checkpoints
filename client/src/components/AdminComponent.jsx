@@ -39,7 +39,7 @@ const AdminComponent = () => {
           },
         }}
       >
-        <Tab label="Schedule" />
+        <Tab label="Check Points" />
         <Tab label="Edit Users" />
       </Tabs>
       <Box sx={{ marginTop: '2rem' }}>
