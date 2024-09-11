@@ -16,7 +16,10 @@ import {
 } from '@mui/material';
 import { useQuery, useMutation } from '@apollo/client';
 import { GET_USERS, GET_CHECKPOINTS_BY_USER } from '../utils/queries';
-import { UPDATE_CHECKPOINTS_BY_FOCUS_AREA, ADD_TASK_TO_CHECKPOINT } from '../utils/mutations';
+import {
+  UPDATE_CHECKPOINTS_BY_FOCUS_AREA,
+  ADD_TASK_TO_CHECKPOINT,
+} from '../utils/mutations';
 
 const AdminScheduleComponent = () => {
   const [openModal, setOpenModal] = useState(null); // Track which modal is open
@@ -29,12 +32,17 @@ const AdminScheduleComponent = () => {
   const [confirmationMessage, setConfirmationMessage] = useState('');
 
   const { data: usersData } = useQuery(GET_USERS);
-  const { data: checkpointsData, refetch: refetchCheckpoints } = useQuery(GET_CHECKPOINTS_BY_USER, {
-    variables: { userId: selectedUser },
-    skip: !selectedUser,
-  });
+  const { data: checkpointsData, refetch: refetchCheckpoints } = useQuery(
+    GET_CHECKPOINTS_BY_USER,
+    {
+      variables: { userId: selectedUser },
+      skip: !selectedUser,
+    }
+  );
 
-  const [updateCheckpointsByFocusArea] = useMutation(UPDATE_CHECKPOINTS_BY_FOCUS_AREA);
+  const [updateCheckpointsByFocusArea] = useMutation(
+    UPDATE_CHECKPOINTS_BY_FOCUS_AREA
+  );
   const [addTaskToCheckPoint] = useMutation(ADD_TASK_TO_CHECKPOINT);
 
   const handleOpen = (modalType) => {
@@ -59,7 +67,9 @@ const AdminScheduleComponent = () => {
           assign,
         },
       });
-      setConfirmationMessage(`${selectedOffice} clinicians assigned check point`);
+      setConfirmationMessage(
+        `${selectedOffice} clinicians assigned check point`
+      );
     } catch (error) {
       console.error('Error updating check points:', error);
     }
@@ -102,10 +112,43 @@ const AdminScheduleComponent = () => {
               gap: '1rem',
             }}
           >
-            <Button variant="contained" color="primary" onClick={() => handleOpen('assign')}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => handleOpen('assign')}
+            >
               Assign Check Points
             </Button>
-            <Button variant="contained" color="primary" onClick={() => handleOpen('update')}>
+            {/* <Button
+              variant="contained"
+              color="primary"
+              onClick={() => handleOpen('')}
+            >
+              Remove Check Points
+            </Button> */}
+          </Paper>
+          <Paper
+            elevation={3}
+            sx={{
+              padding: '2rem',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '1rem',
+              mt: '1rem',
+            }}
+          >
+              {/* <Button
+              variant="contained"
+              color="primary"
+              onClick={() => handleOpen('')}
+            >
+              View Clinician Progress
+            </Button> */}
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => handleOpen('update')}
+            >
               Update Clinician Tasks
             </Button>
           </Paper>
@@ -126,7 +169,7 @@ const AdminScheduleComponent = () => {
           }}
         >
           <Typography variant="h6" component="h2" sx={{ textAlign: 'center' }}>
-            Schedule Office Visit
+            Assign Check Points
           </Typography>
           {confirmationMessage && (
             <Alert severity="success" sx={{ mt: 2 }}>
