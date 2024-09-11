@@ -106,16 +106,13 @@ const resolvers = {
     },
 
     updateCheckPoint: async (parent, { checkPointId, updateData }) => {
-      // Find the checkpoint by ID
       const checkPoint = await CheckPoint.findById(checkPointId);
       if (!checkPoint) {
         throw new Error('CheckPoint not found.');
       }
 
-      // Update the checkpoint with the provided data
       Object.assign(checkPoint, updateData);
 
-      // Check if all tasks are completed
       if (checkPoint.tasks.every((task) => task.taskCompleted)) {
         checkPoint.checkpointCompleted = true;
         const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -125,17 +122,14 @@ const resolvers = {
 
         console.log('All tasks are completed. Sending emails to admin users.');
 
-        // Fetch the user associated with the checkpoint
         const user = await User.findById(checkPoint.userId);
         if (!user) {
           throw new Error('User not found.');
         }
 
-        // Fetch admin users (assuming you have a User model and admin users have a role field)
         const adminUsers = await User.find({ isAdmin: true });
         console.log(`Fetched ${adminUsers.length} admin users.`);
 
-        // Send email to each admin user
         for (const admin of adminUsers) {
           console.log(`Preparing to send email to ${admin.email}`);
           const mailOptions = {
@@ -156,18 +150,14 @@ const resolvers = {
         checkPoint.checkpointCompleted = false;
         checkPoint.completedAt = null;
       }
-
-      // Save the updated checkpoint
       await checkPoint.save();
       return checkPoint;
     },
 
     updateCheckpointsByFocusArea: async (_, { focusArea, officeLocation, assign }) => {
       try {
-        // Find all checkpoints with the specified focus area
         const checkpoints = await CheckPoint.find({ focusArea });
 
-        // Filter checkpoints by user office location
         const updatedCheckpoints = [];
         for (const checkpoint of checkpoints) {
           const user = await User.findById(checkpoint.userId);
@@ -192,6 +182,12 @@ const resolvers = {
 
         const newTask = { description, taskCompleted: false };
         checkPoint.tasks.push(newTask);
+
+        if (checkPoint.checkpointCompleted) {
+          checkPoint.checkpointCompleted = false;
+          checkPoint.completedAt = null;
+        }
+
         await checkPoint.save();
 
         return checkPoint;
