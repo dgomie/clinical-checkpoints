@@ -59,7 +59,7 @@ const AdminScheduleComponent = () => {
           assign: true,
         },
       });
-      setConfirmationMessage(`${selectedOffice} clinicians assigned check point`);
+      setConfirmationMessage(`Check Points assigned to ${selectedOffice} clinicians.`);
     } catch (error) {
       console.error('Error updating check points:', error);
     }
@@ -74,7 +74,7 @@ const AdminScheduleComponent = () => {
           assign: false,
         },
       });
-      setConfirmationMessage(`${selectedOffice} clinicians removed check point`);
+      setConfirmationMessage(`Check Points removed from ${selectedOffice} clinicians.`);
     } catch (error) {
       console.error('Error removing check points:', error);
     }
@@ -132,7 +132,7 @@ const AdminScheduleComponent = () => {
               Update Clinician Tasks
             </Button>
             
-            <Divider sx={{ my: 1 }} /> {/* Add Divider here */}
+            <Divider sx={{ my: 1 }} /> 
             
             <Button
               variant="contained"
