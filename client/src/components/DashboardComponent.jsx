@@ -47,12 +47,12 @@ const DashboardComponent = () => {
   const completedCheckpoints = checkpoints.filter(cp => cp.checkpointCompleted);
 
   return (
-    <Container>
+    <Container sx={{mb:"1rem"}}>
       <Paper
         elevation={3}
         sx={{ marginBottom: 2, padding: { xs: 2, sm: 4, md: 6 } }}
       >
-        <Typography variant="h4" component="header">
+        <Typography variant="h4" component="header" sx={{textAlign: "center"}}>
           Welcome {userFirstName}
         </Typography>
       </Paper>
