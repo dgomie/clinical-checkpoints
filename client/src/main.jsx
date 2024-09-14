@@ -12,6 +12,7 @@ import CheckpointsPage from './pages/CheckpointsPage.jsx';
 import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
 import PasswordResetPage from './pages/PasswordResetPage.jsx';
 import AdminPage from './pages/AdminPage.jsx';
+import ClinicianProgressPage from './pages/ClinicianProgressPage.jsx';
 
 const router = createBrowserRouter([
   {
@@ -59,6 +60,10 @@ const router = createBrowserRouter([
       {
         path: 'admin',
         element: <AdminPage />,
+      },
+      {
+        path: 'admin/clinician-progress',
+        element: <ClinicianProgressPage />,
       },
     ],
   },

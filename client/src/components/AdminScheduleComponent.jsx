@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Paper,
   Button,
@@ -27,6 +28,8 @@ const AdminScheduleComponent = () => {
   const [selectedCheckpoint, setSelectedCheckpoint] = useState('');
   const [taskDescription, setTaskDescription] = useState('');
   const [confirmationMessage, setConfirmationMessage] = useState('');
+
+  const navigate = useNavigate();
 
   const { data: usersData } = useQuery(GET_USERS);
   const { data: checkpointsData, refetch: refetchCheckpoints } = useQuery(GET_CHECKPOINTS_BY_USER, {
@@ -120,7 +123,7 @@ const AdminScheduleComponent = () => {
             <Button
               variant="contained"
               color="primary"
-              onClick={() => handleOpen('')}
+              onClick={() => navigate('./clinician-progress')}
             >
               View Clinician Progress
             </Button>
