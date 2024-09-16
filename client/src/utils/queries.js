@@ -56,8 +56,8 @@ export const CHECKPOINTS_QUERY = gql`
 `;
 
 export const CHECKPOINT_QUERY = gql`
-  query GetCheckPoint($id: ID!) {
-    checkPoint(id: $id) {
+  query GetCheckPoint($_id: ID!) {
+    checkPoint(_id: $_id) {
       _id
       focusArea
       userId

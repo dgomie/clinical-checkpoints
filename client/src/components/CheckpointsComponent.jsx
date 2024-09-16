@@ -23,7 +23,7 @@ const CheckpointsComponent = () => {
   const { checkpointId } = useParams();
 
   const { loading, error, data } = useQuery(CHECKPOINT_QUERY, {
-    variables: { id: checkpointId },
+    variables: { _id: checkpointId },
   });
 
   const [updateCheckpoint] = useMutation(UPDATE_CHECKPOINT);
