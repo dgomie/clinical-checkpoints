@@ -56,7 +56,7 @@ export const ADMIN_UPDATE_USER = gql`
 export const ADD_CHECKPOINT = gql`
   mutation AddCheckPoint($input: NewCheckPointInput!) {
     addCheckPoint(input: $input) {
-      id
+      _id
       focusArea
       userId
       tasks {
@@ -73,7 +73,7 @@ export const ADD_CHECKPOINT = gql`
 export const UPDATE_CHECKPOINT = gql`
   mutation UpdateCheckPoint($checkPointId: ID!, $updateData: UpdateCheckPointInput!) {
     updateCheckPoint(checkPointId: $checkPointId, updateData: $updateData) {
-      id
+      _id
       focusArea
       userId
       tasks {
@@ -91,7 +91,7 @@ export const UPDATE_CHECKPOINT = gql`
 export const UPDATE_CHECKPOINTS_BY_FOCUS_AREA = gql`
   mutation UpdateCheckpointsByFocusArea($focusArea: String!, $officeLocation: String!, $assign: Boolean!) {
     updateCheckpointsByFocusArea(focusArea: $focusArea, officeLocation: $officeLocation, assign: $assign) {
-      id
+      _id
       focusArea
       checkpointAssigned
       checkpointCompleted
@@ -117,10 +117,24 @@ export const ADD_TASK_TO_CHECKPOINT = gql`
         description
         taskCompleted
       }
-      id
+      _id
       userId
     }
   }
 `;
 
-//UPDATE_USER_TASKS
+export const DELETE_TASK_FROM_CHECKPOINT = gql`
+  mutation DeleteTaskFromCheckpoint($userId: ID!, $focusArea: String!, $description: String!) {
+    deleteTaskFromCheckpoint(userId: $userId, focusArea: $focusArea, description: $description) {
+      checkpointAssigned
+      tasks {
+        description
+        taskCompleted
+      }
+      _id
+      userId
+    }
+  }
+`;
+
+

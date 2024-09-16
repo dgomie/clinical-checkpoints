@@ -23,7 +23,7 @@ const CheckpointsComponent = () => {
   const { checkpointId } = useParams();
 
   const { loading, error, data } = useQuery(CHECKPOINT_QUERY, {
-    variables: { id: checkpointId },
+    variables: { _id: checkpointId },
   });
 
   const [updateCheckpoint] = useMutation(UPDATE_CHECKPOINT);
@@ -107,8 +107,8 @@ const CheckpointsComponent = () => {
         <Table>
           <TableHead>
             <TableRow sx={{ backgroundColor: 'lightblue' }}>
-              <TableCell sx={{ fontSize: '1rem' , textAlign: 'center' }}>Task</TableCell>
-              <TableCell sx={{ fontSize: '1rem' , textAlign: 'center' }}>Completed</TableCell>
+              <TableCell sx={{ fontSize: '1rem' , textAlign: 'center', fontWeight: 'bold'  }}>Task</TableCell>
+              <TableCell sx={{ fontSize: '1rem' , textAlign: 'center', fontWeight: 'bold'  }}>Completed</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

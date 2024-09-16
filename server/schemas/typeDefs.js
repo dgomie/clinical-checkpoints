@@ -20,7 +20,7 @@ const typeDefs = `
   }
 
   type CheckPoint {
-    id: ID!
+    _id: ID!
     focusArea: String!
     userId: ID!
     tasks: [Task]
@@ -33,9 +33,9 @@ const typeDefs = `
   type Query {
     users: [User]
     user(email: String!): User
-    userById(id: ID!): User
+    userById(_id: ID!): User
     checkPoints(userId: ID!): [CheckPoint!]!
-    checkPoint(id: ID!): CheckPoint
+    checkPoint(_id: ID!): CheckPoint
     getCheckpointsByUser(userId: ID!): [CheckPoint]
   }
 
@@ -90,6 +90,7 @@ const typeDefs = `
     updateCheckPoint(checkPointId: ID!, updateData: UpdateCheckPointInput!): CheckPoint
     updateCheckpointsByFocusArea(focusArea: String!, officeLocation: String!, assign: Boolean!): [CheckPoint]
     addTaskToCheckPoint(userId: ID!, focusArea: String!, description: String!): CheckPoint
+    deleteTaskFromCheckpoint(userId: ID!, focusArea: String!, description: String!): CheckPoint!
   }
 `;
 

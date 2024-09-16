@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Container, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { Container, Select, MenuItem, FormControl, InputLabel, Typography } from '@mui/material';
 import ClinicianDetails from './ClinicianDetails';
 import { useQuery } from '@apollo/client';
 import { GET_USERS } from '../utils/queries';
@@ -27,14 +27,16 @@ const ClinicianProgressComponent = () => {
   if (error) return <p>Error: {error.message}</p>;
 
   return (
-    <Container>
+    <Container sx={{mb:"1rem"}}>
+        <Typography variant='h4' sx={{my: '.5rem'}}>Clinician Details</Typography>
+        
       <FormControl fullWidth>
-        <InputLabel id="user-select-label">Select User</InputLabel>
+        <InputLabel id="user-select-label">Select Clinician</InputLabel>
         <Select
           labelId="user-select-label"
           value={selectedUser}
           onChange={handleChange}
-          label="Select User"
+          label="Select Clinician"
         >
           {users.map((user) => (
             <MenuItem key={user._id} value={user}>

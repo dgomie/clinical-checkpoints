@@ -23,16 +23,16 @@ const resolvers = {
       return await User.findOne({ email });
     },
 
-    userById: async (parent, { id }) => {
-      return await User.findById(id);
+    userById: async (parent, { _id }) => {
+      return await User.findById(_id);
     },
 
     checkPoints: async (parent, { userId }) => {
       return await CheckPoint.find({ userId });
     },
 
-    checkPoint: async (parent, { id }) => {
-      return await CheckPoint.findById(id);
+    checkPoint: async (parent, { _id }) => {
+      return await CheckPoint.findById(_id);
     },
 
     getCheckpointsByUser: async (_, { userId }) => {
@@ -199,6 +199,67 @@ const resolvers = {
 
         await checkPoint.save();
 
+        return checkPoint;
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
+
+    deleteTaskFromCheckpoint: async (_, { userId, focusArea, description }) => {
+      try {
+        const checkPoint = await CheckPoint.findOne({ userId, focusArea });
+        if (!checkPoint) {
+          throw new Error('CheckPoint not found');
+        }
+    
+        const taskIndex = checkPoint.tasks.findIndex(task => task.description === description);
+        if (taskIndex === -1) {
+          throw new Error('Task not found');
+        }
+    
+        checkPoint.tasks.splice(taskIndex, 1);
+    
+        // Check if all remaining tasks are completed
+        if (checkPoint.tasks.every(task => task.taskCompleted)) {
+          checkPoint.checkpointCompleted = true;
+          const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+          checkPoint.completedAt = new Date().toLocaleString('en-US', {
+            timeZone: userTimeZone,
+          });
+    
+          console.log('All tasks are completed. Sending emails to admin users.');
+    
+          const user = await User.findById(checkPoint.userId);
+          if (!user) {
+            throw new Error('User not found.');
+          }
+    
+          const adminUsers = await User.find({ isAdmin: true });
+          console.log(`Fetched ${adminUsers.length} admin users.`);
+    
+          for (const admin of adminUsers) {
+            console.log(`Preparing to send email to ${admin.email}`);
+            const mailOptions = {
+              from: process.env.GMAIL_UN,
+              to: admin.email,
+              subject: 'Checkpoint Completed',
+              text: `${user.firstName} ${user.lastName} of the ${user.officeLocation} office has completed all tasks of the "${checkPoint.focusArea}" on ${checkPoint.completedAt}.`,
+            };
+    
+            try {
+              const info = await transporter.sendMail(mailOptions);
+              console.log(`Email sent to ${admin.email}: ${info.response}`);
+            } catch (error) {
+              console.error(`Error sending email to ${admin.email}:`, error);
+            }
+          }
+        } else {
+          checkPoint.checkpointCompleted = false;
+          checkPoint.completedAt = null;
+        }
+    
+        await checkPoint.save();
+    
         return checkPoint;
       } catch (error) {
         throw new Error(error.message);
