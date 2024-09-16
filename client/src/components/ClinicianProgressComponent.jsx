@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Container, Select, MenuItem, FormControl, InputLabel, Typography, Divider } from '@mui/material';
+import { Container, Select, MenuItem, FormControl, InputLabel, Typography } from '@mui/material';
 import ClinicianDetails from './ClinicianDetails';
 import { useQuery } from '@apollo/client';
 import { GET_USERS } from '../utils/queries';

@@ -23,16 +23,16 @@ const resolvers = {
       return await User.findOne({ email });
     },
 
-    userById: async (parent, { id }) => {
-      return await User.findById(id);
+    userById: async (parent, { _id }) => {
+      return await User.findById(_id);
     },
 
     checkPoints: async (parent, { userId }) => {
       return await CheckPoint.find({ userId });
     },
 
-    checkPoint: async (parent, { id }) => {
-      return await CheckPoint.findById(id);
+    checkPoint: async (parent, { _id }) => {
+      return await CheckPoint.findById(_id);
     },
 
     getCheckpointsByUser: async (_, { userId }) => {

@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import { GET_CHECKPOINTS_BY_USER } from '../utils/queries';
 import {
   ADD_TASK_TO_CHECKPOINT,
   DELETE_TASK_FROM_CHECKPOINT,
+  UPDATE_CHECKPOINT
 } from '../utils/mutations';
 import {
   Typography,
@@ -26,6 +27,10 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -37,9 +42,12 @@ const ClinicianDetails = ({ user }) => {
 
   const [addTaskToCheckpoint] = useMutation(ADD_TASK_TO_CHECKPOINT);
   const [deleteTaskFromCheckpoint] = useMutation(DELETE_TASK_FROM_CHECKPOINT);
+  const [updateCheckPoint] = useMutation(UPDATE_CHECKPOINT);
 
   const [open, setOpen] = useState(false);
+  const [assignModalOpen, setAssignModalOpen] = useState(false);
   const [selectedCheckpoint, setSelectedCheckpoint] = useState(null);
+  const [selectedUnassignedCheckpoint, setSelectedUnassignedCheckpoint] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [taskDescription, setTaskDescription] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
@@ -55,6 +63,15 @@ const ClinicianDetails = ({ user }) => {
     setShowForm(false);
     setTaskDescription('');
     setSuccessMessage('');
+  };
+
+  const handleAssignModalOpen = () => {
+    setAssignModalOpen(true);
+  };
+
+  const handleAssignModalClose = () => {
+    setAssignModalOpen(false);
+    setSelectedUnassignedCheckpoint('');
   };
 
   const handleAddTask = async () => {
@@ -98,11 +115,27 @@ const ClinicianDetails = ({ user }) => {
       });
       setSelectedCheckpoint((prev) => ({
         ...prev,
-        tasks: prev.tasks.filter(
-          (task) => task.description !== taskDescription
-        ),
+        tasks: prev.tasks.filter((task) => task.description !== taskDescription),
       }));
       setSuccessMessage('Task deleted successfully!');
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleAssignCheckpoint = async () => {
+    try {
+      await updateCheckPoint({
+        variables: {
+          checkPointId: selectedUnassignedCheckpoint,
+          updateData: { checkpointAssigned: true },
+        },
+        refetchQueries: [
+          { query: GET_CHECKPOINTS_BY_USER, variables: { userId: user._id } },
+        ],
+      });
+      setAssignModalOpen(false);
+      setSelectedUnassignedCheckpoint('');
     } catch (err) {
       console.error(err);
     }
@@ -119,20 +152,15 @@ const ClinicianDetails = ({ user }) => {
   const completedCheckpoints =
     data?.checkPoints?.filter((checkpoint) => checkpoint.checkpointCompleted) ||
     [];
+  const unassignedCheckpoints =
+    data?.checkPoints?.filter((checkpoint) => !checkpoint.checkpointAssigned) ||
+    [];
 
   return (
     <div>
-        <Paper
-        elevation={3}
-        sx={{ my: 2, padding: { xs: 1, sm: 3, md: 4 } }}
-      >
-        <Typography variant="h5" sx={{textAlign: 'center'}}>
-          {user.firstName} {user.lastName}
-        </Typography>
-        <Typography sx={{textAlign: 'center', fontStyle: 'italic'}}>
-          {user.officeLocation} Office
-        </Typography>
-      </Paper>
+      <Typography variant="h6">
+        Name: {user.firstName} {user.lastName}
+      </Typography>
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography variant="h5">Assigned Check Points</Typography>
@@ -153,9 +181,7 @@ const ClinicianDetails = ({ user }) => {
                   style={{ marginBottom: '10px', cursor: 'pointer' }}
                 >
                   <CardContent>
-                    <Typography variant="body1">
-                      {checkpoint.focusArea}
-                    </Typography>
+                    <Typography variant="body1">{checkpoint.focusArea}</Typography>
                     <LinearProgress variant="determinate" value={progress} />
                     <Typography variant="body2">{`${completedTasks}/${totalTasks} tasks completed`}</Typography>
                   </CardContent>
@@ -163,6 +189,9 @@ const ClinicianDetails = ({ user }) => {
               );
             })}
           </div>
+          <Button variant="contained" color="primary" onClick={handleAssignModalOpen}>
+            Assign Check Point
+          </Button>
         </AccordionDetails>
       </Accordion>
       <Accordion>
@@ -185,9 +214,7 @@ const ClinicianDetails = ({ user }) => {
                   style={{ marginBottom: '10px', cursor: 'pointer' }}
                 >
                   <CardContent>
-                    <Typography variant="body1">
-                      {checkpoint.focusArea}
-                    </Typography>
+                    <Typography variant="body1">{checkpoint.focusArea}</Typography>
                     <LinearProgress variant="determinate" value={progress} />
                     <Typography variant="body2">{`${completedTasks}/${totalTasks} tasks completed`}</Typography>
                   </CardContent>
@@ -205,39 +232,28 @@ const ClinicianDetails = ({ user }) => {
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            width: '90%', 
-            maxWidth: '600px',
+            width: '90%', // Adjust width for mobile
+            maxWidth: '600px', // Set a max width for larger screens
             maxHeight: '75vh',
             bgcolor: 'background.paper',
             boxShadow: 24,
-            p: 2, 
+            p: 2, // Reduce padding for mobile
             overflowY: 'auto',
           }}
         >
-          <Typography
-            variant="h5"
-            component="h2"
-            sx={{ textAlign: 'center', fontWeight: 'bold' }}
-          >
+          <Typography variant="h5" component="h2" sx={{ textAlign: 'center', fontWeight: 'bold'}}>
             {selectedCheckpoint?.focusArea}
           </Typography>
           <Typography variant="h6" component="h2" sx={{ textAlign: 'center' }}>
             Clinician: {user.firstName} {user.lastName}
           </Typography>
           <TableContainer component={Paper}>
-            <Table size="small">
-              {' '}
+            <Table size="small"> {/* Use small size for mobile */}
               <TableHead>
-                <TableRow sx={{ backgroundColor: 'lightblue' }}>
-                  <TableCell sx={{ fontWeight: 'bold' }}>
-                    Task Description
-                  </TableCell>
-                  <TableCell align="center" sx={{ fontWeight: 'bold' }}>
-                    Completed
-                  </TableCell>
-                  <TableCell align="center" sx={{ fontWeight: 'bold' }}>
-                    Actions
-                  </TableCell>
+              <TableRow sx={{ backgroundColor: 'lightblue' }}>
+                  <TableCell sx={{ fontWeight: 'bold' }}>Task Description</TableCell>
+                  <TableCell align="center" sx={{ fontWeight: 'bold' }}>Completed</TableCell>
+                  <TableCell align="center" sx={{ fontWeight: 'bold' }}>Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -286,14 +302,14 @@ const ClinicianDetails = ({ user }) => {
                 onChange={(e) => setTaskDescription(e.target.value)}
                 sx={{ mb: 2 }}
               />
-              <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleAddTask}
-                >
-                  Submit
-                </Button>
+              <Box sx={{display: 'flex', justifyContent: 'center'}}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleAddTask}
+              >
+                Submit
+              </Button>
               </Box>
             </Box>
           )}
@@ -304,6 +320,58 @@ const ClinicianDetails = ({ user }) => {
           )}
         </Box>
       </Modal>
+
+      <Modal open={assignModalOpen} onClose={handleAssignModalClose}>
+  <Box
+    sx={{
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      width: '90%', // Adjust width for mobile
+      maxWidth: '600px', // Set a max width for larger screens
+      maxHeight: '75vh',
+      bgcolor: 'background.paper',
+      boxShadow: 24,
+      p: 2, // Reduce padding for mobile
+      overflowY: 'auto',
+    }}
+  >
+    <Typography variant="h5" component="h2" sx={{ textAlign: 'center', fontWeight: 'bold'}}>
+      Assign Check Point
+    </Typography>
+    <FormControl fullWidth sx={{ mt: 2 }}>
+      <InputLabel id="unassigned-checkpoint-label">Unassigned Check Point</InputLabel>
+      <Select
+        labelId="unassigned-checkpoint-label"
+        value={selectedUnassignedCheckpoint}
+        label="Unassigned Check Point"
+        onChange={(e) => {
+          setSelectedUnassignedCheckpoint(e.target.value);
+        }}
+      >
+        {unassignedCheckpoints.map((checkpoint) => (
+          <MenuItem key={checkpoint._id} value={checkpoint._id}>
+            {checkpoint.focusArea}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mt: 2 }}>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleAssignCheckpoint}
+        disabled={!selectedUnassignedCheckpoint}
+      >
+        Assign
+      </Button>
+      <Button variant="contained" color="secondary" onClick={handleAssignModalClose}>
+        Close
+      </Button>
+    </Box>
+  </Box>
+</Modal>
     </div>
   );
 };
