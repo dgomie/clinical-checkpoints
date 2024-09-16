@@ -123,4 +123,18 @@ export const ADD_TASK_TO_CHECKPOINT = gql`
   }
 `;
 
+export const DELETE_TASK_FROM_CHECKPOINT = gql`
+  mutation DeleteTaskFromCheckpoint($userId: ID!, $focusArea: String!, $description: String!) {
+    deleteTaskFromCheckpoint(userId: $userId, focusArea: $focusArea, description: $description) {
+      checkpointAssigned
+      tasks {
+        description
+        taskCompleted
+      }
+      id
+      userId
+    }
+  }
+`;
+
 
