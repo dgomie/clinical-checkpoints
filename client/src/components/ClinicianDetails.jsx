@@ -156,15 +156,18 @@ const ClinicianDetails = ({ user }) => {
             overflowY: 'auto',
           }}
         >
-          <Typography variant="h6" component="h2" sx={{ textAlign: 'center' }}>
+          <Typography variant="h5" component="h2" sx={{ textAlign: 'center', fontWeight: 'bold'}}>
             {selectedCheckpoint?.focusArea}
+          </Typography>
+          <Typography variant="h6" component="h2" sx={{ textAlign: 'center' }}>
+            Clinician: {user.firstName} {user.lastName}
           </Typography>
           <TableContainer component={Paper}>
             <Table>
               <TableHead>
-                <TableRow>
-                  <TableCell>Task Description</TableCell>
-                  <TableCell align="right">Completed</TableCell>
+              <TableRow sx={{ backgroundColor: 'lightblue' }}>
+                  <TableCell sx={{ fontWeight: 'bold' }}>Task Description</TableCell>
+                  <TableCell align="right" sx={{ fontWeight: 'bold' }}>Completed</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
