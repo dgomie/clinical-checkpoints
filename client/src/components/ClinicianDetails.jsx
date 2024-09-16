@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import { GET_CHECKPOINTS_BY_USER } from '../utils/queries';
-import { ADD_TASK_TO_CHECKPOINT, DELETE_TASK_FROM_CHECKPOINT } from '../utils/mutations';
+import {
+  ADD_TASK_TO_CHECKPOINT,
+  DELETE_TASK_FROM_CHECKPOINT,
+} from '../utils/mutations';
 import {
   Typography,
   Card,
@@ -95,7 +98,9 @@ const ClinicianDetails = ({ user }) => {
       });
       setSelectedCheckpoint((prev) => ({
         ...prev,
-        tasks: prev.tasks.filter((task) => task.description !== taskDescription),
+        tasks: prev.tasks.filter(
+          (task) => task.description !== taskDescription
+        ),
       }));
       setSuccessMessage('Task deleted successfully!');
     } catch (err) {
@@ -117,9 +122,17 @@ const ClinicianDetails = ({ user }) => {
 
   return (
     <div>
-      <Typography variant="h6">
-        Name: {user.firstName} {user.lastName}
-      </Typography>
+        <Paper
+        elevation={3}
+        sx={{ my: 2, padding: { xs: 1, sm: 3, md: 4 } }}
+      >
+        <Typography variant="h5" sx={{textAlign: 'center'}}>
+          {user.firstName} {user.lastName}
+        </Typography>
+        <Typography sx={{textAlign: 'center', fontStyle: 'italic'}}>
+          {user.officeLocation} Office
+        </Typography>
+      </Paper>
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography variant="h5">Assigned Check Points</Typography>
@@ -140,7 +153,9 @@ const ClinicianDetails = ({ user }) => {
                   style={{ marginBottom: '10px', cursor: 'pointer' }}
                 >
                   <CardContent>
-                    <Typography variant="body1">{checkpoint.focusArea}</Typography>
+                    <Typography variant="body1">
+                      {checkpoint.focusArea}
+                    </Typography>
                     <LinearProgress variant="determinate" value={progress} />
                     <Typography variant="body2">{`${completedTasks}/${totalTasks} tasks completed`}</Typography>
                   </CardContent>
@@ -170,7 +185,9 @@ const ClinicianDetails = ({ user }) => {
                   style={{ marginBottom: '10px', cursor: 'pointer' }}
                 >
                   <CardContent>
-                    <Typography variant="body1">{checkpoint.focusArea}</Typography>
+                    <Typography variant="body1">
+                      {checkpoint.focusArea}
+                    </Typography>
                     <LinearProgress variant="determinate" value={progress} />
                     <Typography variant="body2">{`${completedTasks}/${totalTasks} tasks completed`}</Typography>
                   </CardContent>
@@ -188,27 +205,39 @@ const ClinicianDetails = ({ user }) => {
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            width: {xs: 350, sm: 500, md:700},
+            width: '90%', 
+            maxWidth: '600px',
             maxHeight: '75vh',
             bgcolor: 'background.paper',
             boxShadow: 24,
-            p: 4,
+            p: 2, 
             overflowY: 'auto',
           }}
         >
-          <Typography variant="h5" component="h2" sx={{ textAlign: 'center', fontWeight: 'bold'}}>
+          <Typography
+            variant="h5"
+            component="h2"
+            sx={{ textAlign: 'center', fontWeight: 'bold' }}
+          >
             {selectedCheckpoint?.focusArea}
           </Typography>
           <Typography variant="h6" component="h2" sx={{ textAlign: 'center' }}>
             Clinician: {user.firstName} {user.lastName}
           </Typography>
           <TableContainer component={Paper}>
-            <Table>
+            <Table size="small">
+              {' '}
               <TableHead>
-              <TableRow sx={{ backgroundColor: 'lightblue' }}>
-                  <TableCell sx={{ fontWeight: 'bold' }}>Task Description</TableCell>
-                  <TableCell align="right" sx={{ fontWeight: 'bold' }}>Completed</TableCell>
-                  <TableCell align="right" sx={{ fontWeight: 'bold' }}>Actions</TableCell>
+                <TableRow sx={{ backgroundColor: 'lightblue' }}>
+                  <TableCell sx={{ fontWeight: 'bold' }}>
+                    Task Description
+                  </TableCell>
+                  <TableCell align="center" sx={{ fontWeight: 'bold' }}>
+                    Completed
+                  </TableCell>
+                  <TableCell align="center" sx={{ fontWeight: 'bold' }}>
+                    Actions
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -217,10 +246,10 @@ const ClinicianDetails = ({ user }) => {
                     <TableCell component="th" scope="row">
                       {task.description}
                     </TableCell>
-                    <TableCell align="right">
+                    <TableCell align="center">
                       {task.taskCompleted ? 'Yes' : 'No'}
                     </TableCell>
-                    <TableCell align="right">
+                    <TableCell align="center">
                       <IconButton
                         aria-label="delete"
                         onClick={() => handleDeleteTask(task.description)}
@@ -257,14 +286,14 @@ const ClinicianDetails = ({ user }) => {
                 onChange={(e) => setTaskDescription(e.target.value)}
                 sx={{ mb: 2 }}
               />
-              <Box sx={{display: 'flex', justifyContent: 'center'}}>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleAddTask}
-              >
-                Submit
-              </Button>
+              <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleAddTask}
+                >
+                  Submit
+                </Button>
               </Box>
             </Box>
           )}

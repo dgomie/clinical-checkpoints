@@ -27,7 +27,7 @@ const ClinicianProgressComponent = () => {
   if (error) return <p>Error: {error.message}</p>;
 
   return (
-    <Container>
+    <Container sx={{mb:"1rem"}}>
         <Typography variant='h4' sx={{my: '.5rem'}}>Clinician Details</Typography>
         
       <FormControl fullWidth>
