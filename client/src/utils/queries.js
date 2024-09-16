@@ -77,6 +77,12 @@ export const GET_CHECKPOINTS_BY_USER = gql`
     checkPoints(userId: $userId) {
       id
       focusArea
+      tasks {
+        description
+        taskCompleted
+      }
+      checkpointAssigned
+      checkpointCompleted
     }
   }
 `;
