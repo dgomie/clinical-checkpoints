@@ -210,6 +210,7 @@ const ClinicianDetails = ({ user }) => {
               );
             })}
           </div>
+          <Box sx={{display: "flex", justifyContent: "center"}}>
           <Button
             variant="contained"
             color="primary"
@@ -217,6 +218,7 @@ const ClinicianDetails = ({ user }) => {
           >
             Assign Check Point
           </Button>
+          </Box>
         </AccordionDetails>
       </Accordion>
       <Accordion>
@@ -396,12 +398,12 @@ const ClinicianDetails = ({ user }) => {
           </Typography>
           <FormControl fullWidth sx={{ mt: 2 }}>
             <InputLabel id="unassigned-checkpoint-label">
-              Unassigned Check Point
+              Select Check Point
             </InputLabel>
             <Select
               labelId="unassigned-checkpoint-label"
               value={selectedUnassignedCheckpoint}
-              label="Unassigned Check Point"
+              label="Select Check Point"
               onChange={(e) => {
                 setSelectedUnassignedCheckpoint(e.target.value);
               }}
