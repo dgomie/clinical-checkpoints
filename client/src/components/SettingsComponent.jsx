@@ -210,7 +210,7 @@ const SettingsComponent = () => {
       <Container maxWidth="md">
         <Paper
           elevation={3}
-          sx={{ marginBottom: 2, padding: { xs: 2, sm: 4, md: 6 } }}
+          sx={{ marginBottom: 2, padding: { xs: 1, sm: 2} }}
         >
           <Typography variant="h4" component="header">
             Settings
@@ -218,7 +218,7 @@ const SettingsComponent = () => {
         </Paper>
         <Paper
           elevation={3}
-          sx={{ marginBottom: 2, padding: { xs: 2, sm: 4, md: 6 } }}
+          sx={{ marginBottom: 2, padding: { xs: 2, sm: 3} }}
         >
           <Box component="main" sx={{ width: '100%' }}>
             <Box mb={4}>
@@ -301,7 +301,7 @@ const SettingsComponent = () => {
 
         <Paper
           elevation={3}
-          sx={{ marginBottom: 2, padding: { xs: 2, sm: 4, md: 6 } }}
+          sx={{ marginBottom: 2, padding: { xs: 2, sm: 3} }}
         >
           <Typography variant="h5" component="h2" gutterBottom>
             Change Password
@@ -388,7 +388,7 @@ const SettingsComponent = () => {
           </Box>
         </Paper>
 
-        <Paper elevation={3} sx={{ padding: { xs: 2, sm: 4, md: 6 } }}>
+        <Paper elevation={3} sx={{ marginBottom: 2, padding: { xs: 1, sm: 2, } }}>
           <Box mb={4}>
             <Typography variant="h5" component="h2" gutterBottom>
               Delete Account
