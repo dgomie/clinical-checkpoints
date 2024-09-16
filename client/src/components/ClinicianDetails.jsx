@@ -16,7 +16,6 @@ const ClinicianDetails = ({ user }) => {
   console.log(assignedCheckpoints)
   return (
     <div>
-      <Typography variant='h4'>Clinician Details</Typography>
       <Typography variant='h6'>Name: {user.firstName} {user.lastName}</Typography>
       <Typography variant='h5'>Assigned Check Points</Typography>
       <ul>

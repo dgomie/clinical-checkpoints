@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Container, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { Container, Select, MenuItem, FormControl, InputLabel, Typography, Divider } from '@mui/material';
 import ClinicianDetails from './ClinicianDetails';
 import { useQuery } from '@apollo/client';
 import { GET_USERS } from '../utils/queries';
@@ -28,6 +28,8 @@ const ClinicianProgressComponent = () => {
 
   return (
     <Container>
+        <Typography variant='h4' sx={{my: '.5rem'}}>Clinician Details</Typography>
+        
       <FormControl fullWidth>
         <InputLabel id="user-select-label">Select User</InputLabel>
         <Select
