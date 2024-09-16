@@ -192,7 +192,18 @@ const ClinicianDetails = ({ user }) => {
                     <Typography variant="body1">
                       {checkpoint.focusArea}
                     </Typography>
-                    <LinearProgress variant="determinate" value={progress} />
+                    <LinearProgress
+                      variant="determinate"
+                      value={progress}
+                      sx={{
+                        height: 10,
+                        borderRadius: 5,
+                        backgroundColor: 'lightgray',
+                        '& .MuiLinearProgress-bar': {
+                          backgroundColor: 'blue',
+                        },
+                      }}
+                    />
                     <Typography variant="body2">{`${completedTasks}/${totalTasks} tasks completed`}</Typography>
                   </CardContent>
                 </Card>
@@ -231,7 +242,18 @@ const ClinicianDetails = ({ user }) => {
                     <Typography variant="body1">
                       {checkpoint.focusArea}
                     </Typography>
-                    <LinearProgress variant="determinate" value={progress} />
+                    <LinearProgress
+                      variant="determinate"
+                      value={progress}
+                      sx={{
+                        height: 10,
+                        borderRadius: 5,
+                        backgroundColor: 'lightgray',
+                        '& .MuiLinearProgress-bar': {
+                          backgroundColor: 'blue',
+                        },
+                      }}
+                    />
                     <Typography variant="body2">{`${completedTasks}/${totalTasks} tasks completed`}</Typography>
                   </CardContent>
                 </Card>
