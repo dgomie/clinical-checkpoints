@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import { GET_CHECKPOINTS_BY_USER } from '../utils/queries';
-import { ADD_TASK_TO_CHECKPOINT } from '../utils/mutations';
+import { ADD_TASK_TO_CHECKPOINT, DELETE_TASK_FROM_CHECKPOINT } from '../utils/mutations';
 import {
   Typography,
   Card,
@@ -25,6 +25,7 @@ import {
   AccordionDetails,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const ClinicianDetails = ({ user }) => {
   const { loading, error, data } = useQuery(GET_CHECKPOINTS_BY_USER, {
@@ -32,6 +33,7 @@ const ClinicianDetails = ({ user }) => {
   });
 
   const [addTaskToCheckpoint] = useMutation(ADD_TASK_TO_CHECKPOINT);
+  const [deleteTaskFromCheckpoint] = useMutation(DELETE_TASK_FROM_CHECKPOINT);
 
   const [open, setOpen] = useState(false);
   const [selectedCheckpoint, setSelectedCheckpoint] = useState(null);
@@ -74,6 +76,28 @@ const ClinicianDetails = ({ user }) => {
           { description: taskDescription, taskCompleted: false },
         ],
       }));
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleDeleteTask = async (taskDescription) => {
+    try {
+      await deleteTaskFromCheckpoint({
+        variables: {
+          focusArea: selectedCheckpoint.focusArea,
+          description: taskDescription,
+          userId: user._id,
+        },
+        refetchQueries: [
+          { query: GET_CHECKPOINTS_BY_USER, variables: { userId: user._id } },
+        ],
+      });
+      setSelectedCheckpoint((prev) => ({
+        ...prev,
+        tasks: prev.tasks.filter((task) => task.description !== taskDescription),
+      }));
+      setSuccessMessage('Task deleted successfully!');
     } catch (err) {
       console.error(err);
     }
@@ -184,6 +208,7 @@ const ClinicianDetails = ({ user }) => {
               <TableRow sx={{ backgroundColor: 'lightblue' }}>
                   <TableCell sx={{ fontWeight: 'bold' }}>Task Description</TableCell>
                   <TableCell align="right" sx={{ fontWeight: 'bold' }}>Completed</TableCell>
+                  <TableCell align="right" sx={{ fontWeight: 'bold' }}>Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -194,6 +219,14 @@ const ClinicianDetails = ({ user }) => {
                     </TableCell>
                     <TableCell align="right">
                       {task.taskCompleted ? 'Yes' : 'No'}
+                    </TableCell>
+                    <TableCell align="right">
+                      <IconButton
+                        aria-label="delete"
+                        onClick={() => handleDeleteTask(task.description)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
                     </TableCell>
                   </TableRow>
                 ))}

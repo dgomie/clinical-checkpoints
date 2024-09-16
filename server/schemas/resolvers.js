@@ -204,6 +204,28 @@ const resolvers = {
         throw new Error(error.message);
       }
     },
+
+    deleteTaskFromCheckpoint: async (_, { userId, focusArea, description }) => {
+      try {
+        const checkPoint = await CheckPoint.findOne({ userId, focusArea });
+        if (!checkPoint) {
+          throw new Error('CheckPoint not found');
+        }
+    
+        const taskIndex = checkPoint.tasks.findIndex(task => task.description === description);
+        if (taskIndex === -1) {
+          throw new Error('Task not found');
+        }
+    
+        checkPoint.tasks.splice(taskIndex, 1);
+    
+        await checkPoint.save();
+    
+        return checkPoint;
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
   },
 };
 

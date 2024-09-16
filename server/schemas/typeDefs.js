@@ -90,6 +90,7 @@ const typeDefs = `
     updateCheckPoint(checkPointId: ID!, updateData: UpdateCheckPointInput!): CheckPoint
     updateCheckpointsByFocusArea(focusArea: String!, officeLocation: String!, assign: Boolean!): [CheckPoint]
     addTaskToCheckPoint(userId: ID!, focusArea: String!, description: String!): CheckPoint
+    deleteTaskFromCheckpoint(userId: ID!, focusArea: String!, description: String!): CheckPoint!
   }
 `;
 
