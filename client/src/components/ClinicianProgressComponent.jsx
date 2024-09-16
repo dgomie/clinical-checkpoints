@@ -28,7 +28,7 @@ const ClinicianProgressComponent = () => {
 
   return (
     <Container sx={{mb:"1rem"}}>
-        <Typography variant='h4' sx={{my: '.5rem'}}>Clinician Details</Typography>
+        <Typography variant='h4' sx={{my: '.5rem', textAlign: 'center'}}>Clinician Details</Typography>
         
       <FormControl fullWidth>
         <InputLabel id="user-select-label">Select Clinician</InputLabel>
