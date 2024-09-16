@@ -20,7 +20,11 @@ import {
   Alert,
   IconButton,
   LinearProgress,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const ClinicianDetails = ({ user }) => {
   const { loading, error, data } = useQuery(GET_CHECKPOINTS_BY_USER, {
@@ -92,54 +96,66 @@ const ClinicianDetails = ({ user }) => {
       <Typography variant="h6">
         Name: {user.firstName} {user.lastName}
       </Typography>
-      <Typography variant="h5">Assigned Check Points</Typography>
-      <div>
-        {assignedCheckpoints.map((checkpoint) => {
-          const totalTasks = checkpoint.tasks.length;
-          const completedTasks = checkpoint.tasks.filter(
-            (task) => task.taskCompleted
-          ).length;
-          const progress = (completedTasks / totalTasks) * 100;
+      <Accordion>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography variant="h5">Assigned Check Points</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <div>
+            {assignedCheckpoints.map((checkpoint) => {
+              const totalTasks = checkpoint.tasks.length;
+              const completedTasks = checkpoint.tasks.filter(
+                (task) => task.taskCompleted
+              ).length;
+              const progress = (completedTasks / totalTasks) * 100;
 
-          return (
-            <Card
-              key={checkpoint._id}
-              onClick={() => handleOpen(checkpoint)}
-              style={{ marginBottom: '10px', cursor: 'pointer' }}
-            >
-              <CardContent>
-                <Typography variant="body1">{checkpoint.focusArea}</Typography>
-                <LinearProgress variant="determinate" value={progress} />
-                <Typography variant="body2">{`${completedTasks}/${totalTasks} tasks completed`}</Typography>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
-      <Typography variant="h5">Completed Check Points</Typography>
-      <div>
-        {completedCheckpoints.map((checkpoint) => {
-          const totalTasks = checkpoint.tasks.length;
-          const completedTasks = checkpoint.tasks.filter(
-            (task) => task.taskCompleted
-          ).length;
-          const progress = (completedTasks / totalTasks) * 100;
+              return (
+                <Card
+                  key={checkpoint._id}
+                  onClick={() => handleOpen(checkpoint)}
+                  style={{ marginBottom: '10px', cursor: 'pointer' }}
+                >
+                  <CardContent>
+                    <Typography variant="body1">{checkpoint.focusArea}</Typography>
+                    <LinearProgress variant="determinate" value={progress} />
+                    <Typography variant="body2">{`${completedTasks}/${totalTasks} tasks completed`}</Typography>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography variant="h5">Completed Check Points</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <div>
+            {completedCheckpoints.map((checkpoint) => {
+              const totalTasks = checkpoint.tasks.length;
+              const completedTasks = checkpoint.tasks.filter(
+                (task) => task.taskCompleted
+              ).length;
+              const progress = (completedTasks / totalTasks) * 100;
 
-          return (
-            <Card
-              key={checkpoint._id}
-              onClick={() => handleOpen(checkpoint)}
-              style={{ marginBottom: '10px', cursor: 'pointer' }}
-            >
-              <CardContent>
-                <Typography variant="body1">{checkpoint.focusArea}</Typography>
-                <LinearProgress variant="determinate" value={progress} />
-                <Typography variant="body2">{`${completedTasks}/${totalTasks} tasks completed`}</Typography>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
+              return (
+                <Card
+                  key={checkpoint._id}
+                  onClick={() => handleOpen(checkpoint)}
+                  style={{ marginBottom: '10px', cursor: 'pointer' }}
+                >
+                  <CardContent>
+                    <Typography variant="body1">{checkpoint.focusArea}</Typography>
+                    <LinearProgress variant="determinate" value={progress} />
+                    <Typography variant="body2">{`${completedTasks}/${totalTasks} tasks completed`}</Typography>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </AccordionDetails>
+      </Accordion>
 
       <Modal open={open} onClose={handleClose}>
         <Box
