@@ -31,12 +31,12 @@ const ClinicianProgressComponent = () => {
         <Typography variant='h4' sx={{my: '.5rem'}}>Clinician Details</Typography>
         
       <FormControl fullWidth>
-        <InputLabel id="user-select-label">Select User</InputLabel>
+        <InputLabel id="user-select-label">Select Clinician</InputLabel>
         <Select
           labelId="user-select-label"
           value={selectedUser}
           onChange={handleChange}
-          label="Select User"
+          label="Select Clinician"
         >
           {users.map((user) => (
             <MenuItem key={user._id} value={user}>
