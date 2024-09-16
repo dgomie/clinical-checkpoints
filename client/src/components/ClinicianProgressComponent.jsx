@@ -31,7 +31,7 @@ const ClinicianProgressComponent = () => {
 
   return (
     <Container sx={{ mb: "1rem" }}>
-      <Typography variant='h4' sx={{ my: '.5rem', textAlign: 'center' }}>Clinician Details</Typography>
+      <Typography variant='h4' sx={{ my: '.5rem', textAlign: 'center' }}>Clinician Progress</Typography>
       
       <FormControl fullWidth sx={{ mt: 2 }}>
         <InputLabel id="office-select-label">Select Office Location</InputLabel>
