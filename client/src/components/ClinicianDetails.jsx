@@ -56,7 +56,6 @@ const ClinicianDetails = ({ user }) => {
   const handleOpen = (checkpoint) => {
     setSelectedCheckpoint(checkpoint);
     setOpen(true);
-    console.log(checkpoint);
   };
 
   const handleClose = () => {
