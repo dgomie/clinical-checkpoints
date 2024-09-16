@@ -83,6 +83,7 @@ export const GET_CHECKPOINTS_BY_USER = gql`
       }
       checkpointAssigned
       checkpointCompleted
+      completedAt
     }
   }
 `;

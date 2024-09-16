@@ -56,6 +56,7 @@ const ClinicianDetails = ({ user }) => {
   const handleOpen = (checkpoint) => {
     setSelectedCheckpoint(checkpoint);
     setOpen(true);
+    console.log(checkpoint);
   };
 
   const handleClose = () => {
@@ -210,14 +211,14 @@ const ClinicianDetails = ({ user }) => {
               );
             })}
           </div>
-          <Box sx={{display: "flex", justifyContent: "center"}}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleAssignModalOpen}
-          >
-            Assign Check Point
-          </Button>
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleAssignModalOpen}
+            >
+              Assign Check Point
+            </Button>
           </Box>
         </AccordionDetails>
       </Accordion>
@@ -290,6 +291,13 @@ const ClinicianDetails = ({ user }) => {
           </Typography>
           <Typography variant="h6" component="h2" sx={{ textAlign: 'center' }}>
             Clinician: {user.firstName} {user.lastName}
+          </Typography>
+          <Typography sx={{textAlign: 'center'}}>
+            {selectedCheckpoint?.completedAt
+              ? `Date Completed: ${new Date(
+                  parseInt(selectedCheckpoint.completedAt)
+                ).toLocaleDateString()}`
+              : ''}
           </Typography>
           <TableContainer component={Paper}>
             <Table size="small">
