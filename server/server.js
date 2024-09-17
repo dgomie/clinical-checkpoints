@@ -12,15 +12,23 @@ const bcrypt = require('bcrypt');
 const User = require('./models/User');
 const nodemailer = require('nodemailer');
 const base64url = require('base64url'); // Import base64url
+const { ApolloServerPluginLandingPageDisabled } = require('@apollo/server/plugin/disabled');
 
 
 
 const PORT = process.env.PORT || 3001;
 const app = express();
+
+const plugins = [];
+if (process.env.NODE_ENV === 'production') {
+  plugins.push(ApolloServerPluginLandingPageDisabled());
+}
+
 const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: authMiddleware,
+  plugins,
 });
 
 
