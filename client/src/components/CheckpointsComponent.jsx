@@ -90,6 +90,7 @@ const CheckpointsComponent = () => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
+
   return (
     <Container>
       <Button
@@ -103,6 +104,13 @@ const CheckpointsComponent = () => {
       <Typography variant="h4" align="center">
         {checkpoint.focusArea}
       </Typography>
+      <Typography sx={{textAlign: 'center'}}>
+            {checkpoint?.completedAt
+              ? `Date Completed: ${new Date(
+                  parseInt(checkpoint.completedAt)
+                ).toLocaleDateString()}`
+              : ''}
+          </Typography>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>

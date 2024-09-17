@@ -210,13 +210,15 @@ const ClinicianDetails = ({ user }) => {
               );
             })}
           </div>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleAssignModalOpen}
-          >
-            Assign Check Point
-          </Button>
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleAssignModalOpen}
+            >
+              Assign Check Point
+            </Button>
+          </Box>
         </AccordionDetails>
       </Accordion>
       <Accordion>
@@ -288,6 +290,13 @@ const ClinicianDetails = ({ user }) => {
           </Typography>
           <Typography variant="h6" component="h2" sx={{ textAlign: 'center' }}>
             Clinician: {user.firstName} {user.lastName}
+          </Typography>
+          <Typography sx={{textAlign: 'center'}}>
+            {selectedCheckpoint?.completedAt
+              ? `Date Completed: ${new Date(
+                  parseInt(selectedCheckpoint.completedAt)
+                ).toLocaleDateString()}`
+              : ''}
           </Typography>
           <TableContainer component={Paper}>
             <Table size="small">
@@ -396,12 +405,12 @@ const ClinicianDetails = ({ user }) => {
           </Typography>
           <FormControl fullWidth sx={{ mt: 2 }}>
             <InputLabel id="unassigned-checkpoint-label">
-              Unassigned Check Point
+              Select Check Point
             </InputLabel>
             <Select
               labelId="unassigned-checkpoint-label"
               value={selectedUnassignedCheckpoint}
-              label="Unassigned Check Point"
+              label="Select Check Point"
               onChange={(e) => {
                 setSelectedUnassignedCheckpoint(e.target.value);
               }}

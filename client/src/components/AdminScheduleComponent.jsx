@@ -127,13 +127,6 @@ const AdminScheduleComponent = () => {
             >
               View Clinician Progress
             </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => handleOpen('update')}
-            >
-              Update Clinician Tasks
-            </Button>
             
             <Divider sx={{ my: 1 }} /> 
             
@@ -246,78 +239,6 @@ const AdminScheduleComponent = () => {
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
             <Button variant="contained" color="primary" onClick={handleAssign}>
               Assign
-            </Button>
-            <Button variant="outlined" color="secondary" onClick={handleClose}>
-              Cancel
-            </Button>
-          </Box>
-        </Box>
-      </Modal>
-
-      <Modal open={openModal === 'update'} onClose={handleClose}>
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: 400,
-            bgcolor: 'background.paper',
-            boxShadow: 24,
-            p: 4,
-          }}
-        >
-          <Typography variant="h6" component="h2" sx={{ textAlign: 'center' }}>
-            Add Task to CheckPoint
-          </Typography>
-          {confirmationMessage && (
-            <Alert severity="success" sx={{ mt: 2 }}>
-              {confirmationMessage}
-            </Alert>
-          )}
-          <FormControl fullWidth sx={{ mt: 2 }}>
-            <InputLabel id="user-select-label">User</InputLabel>
-            <Select
-              labelId="user-select-label"
-              value={selectedUser}
-              onChange={(e) => setSelectedUser(e.target.value)}
-              label="User"
-            >
-              {usersData?.users.map((user) => (
-                <MenuItem key={user._id} value={user._id}>
-                  {user.firstName} {user.lastName}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl fullWidth sx={{ mt: 2 }}>
-            <InputLabel id="checkpoint-select-label">Check Point</InputLabel>
-            <Select
-              labelId="checkpoint-select-label"
-              value={selectedCheckpoint}
-              onChange={(e) => setSelectedCheckpoint(e.target.value)}
-              label="Check Point"
-            >
-              {checkpointsData?.checkPoints
-                .slice()
-                .sort((a, b) => a.focusArea.localeCompare(b.focusArea))
-                .map((checkpoint) => (
-                  <MenuItem key={checkpoint.id} value={checkpoint.focusArea}>
-                    {checkpoint.focusArea}
-                  </MenuItem>
-                ))}
-            </Select>
-          </FormControl>
-          <TextField
-            fullWidth
-            sx={{ mt: 2 }}
-            label="Task"
-            value={taskDescription}
-            onChange={(e) => setTaskDescription(e.target.value)}
-          />
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-            <Button variant="contained" color="primary" onClick={handleAddTask}>
-              Add Task
             </Button>
             <Button variant="outlined" color="secondary" onClick={handleClose}>
               Cancel
