@@ -47,7 +47,7 @@
 
   The application is deployed and can be accessed at: https://clinical-checkpoints.onrender.com
 
-  Note: The application is currently on trial plan and may take up to a 50 seconds to spin up.
+  *Note: The application is currently on trial plan and may take up to a 50 seconds to spin up.*
 
 
   ## Questions
