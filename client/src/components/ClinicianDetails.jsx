@@ -175,40 +175,44 @@ const ClinicianDetails = ({ user }) => {
         </AccordionSummary>
         <AccordionDetails>
           <div>
-            {assignedCheckpoints.map((checkpoint) => {
-              const totalTasks = checkpoint.tasks.length;
-              const completedTasks = checkpoint.tasks.filter(
-                (task) => task.taskCompleted
-              ).length;
-              const progress = (completedTasks / totalTasks) * 100;
+            {assignedCheckpoints.length === 0 ? (
+              <Typography variant="body1">No check points assigned</Typography>
+            ) : (
+              assignedCheckpoints.map((checkpoint) => {
+                const totalTasks = checkpoint.tasks.length;
+                const completedTasks = checkpoint.tasks.filter(
+                  (task) => task.taskCompleted
+                ).length;
+                const progress = (completedTasks / totalTasks) * 100;
 
-              return (
-                <Card
-                  key={checkpoint._id}
-                  onClick={() => handleOpen(checkpoint)}
-                  style={{ marginBottom: '10px', cursor: 'pointer' }}
-                >
-                  <CardContent>
-                    <Typography variant="body1">
-                      {checkpoint.focusArea}
-                    </Typography>
-                    <LinearProgress
-                      variant="determinate"
-                      value={progress}
-                      sx={{
-                        height: 10,
-                        borderRadius: 5,
-                        backgroundColor: 'lightgray',
-                        '& .MuiLinearProgress-bar': {
-                          backgroundColor: 'blue',
-                        },
-                      }}
-                    />
-                    <Typography variant="body2">{`${completedTasks}/${totalTasks} tasks completed`}</Typography>
-                  </CardContent>
-                </Card>
-              );
-            })}
+                return (
+                  <Card
+                    key={checkpoint._id}
+                    onClick={() => handleOpen(checkpoint)}
+                    style={{ marginBottom: '10px', cursor: 'pointer' }}
+                  >
+                    <CardContent>
+                      <Typography variant="body1">
+                        {checkpoint.focusArea}
+                      </Typography>
+                      <LinearProgress
+                        variant="determinate"
+                        value={progress}
+                        sx={{
+                          height: 10,
+                          borderRadius: 5,
+                          backgroundColor: 'lightgray',
+                          '& .MuiLinearProgress-bar': {
+                            backgroundColor: 'blue',
+                          },
+                        }}
+                      />
+                      <Typography variant="body2">{`${completedTasks}/${totalTasks} tasks completed`}</Typography>
+                    </CardContent>
+                  </Card>
+                );
+              })
+            )}
           </div>
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <Button
@@ -227,40 +231,44 @@ const ClinicianDetails = ({ user }) => {
         </AccordionSummary>
         <AccordionDetails>
           <div>
-            {completedCheckpoints.map((checkpoint) => {
-              const totalTasks = checkpoint.tasks.length;
-              const completedTasks = checkpoint.tasks.filter(
-                (task) => task.taskCompleted
-              ).length;
-              const progress = (completedTasks / totalTasks) * 100;
+            {completedCheckpoints.length === 0 ? (
+              <Typography variant="body1">No check points completed</Typography>
+            ) : (
+              completedCheckpoints.map((checkpoint) => {
+                const totalTasks = checkpoint.tasks.length;
+                const completedTasks = checkpoint.tasks.filter(
+                  (task) => task.taskCompleted
+                ).length;
+                const progress = (completedTasks / totalTasks) * 100;
 
-              return (
-                <Card
-                  key={checkpoint._id}
-                  onClick={() => handleOpen(checkpoint)}
-                  style={{ marginBottom: '10px', cursor: 'pointer' }}
-                >
-                  <CardContent>
-                    <Typography variant="body1">
-                      {checkpoint.focusArea}
-                    </Typography>
-                    <LinearProgress
-                      variant="determinate"
-                      value={progress}
-                      sx={{
-                        height: 10,
-                        borderRadius: 5,
-                        backgroundColor: 'lightgray',
-                        '& .MuiLinearProgress-bar': {
-                          backgroundColor: 'blue',
-                        },
-                      }}
-                    />
-                    <Typography variant="body2">{`${completedTasks}/${totalTasks} tasks completed`}</Typography>
-                  </CardContent>
-                </Card>
-              );
-            })}
+                return (
+                  <Card
+                    key={checkpoint._id}
+                    onClick={() => handleOpen(checkpoint)}
+                    style={{ marginBottom: '10px', cursor: 'pointer' }}
+                  >
+                    <CardContent>
+                      <Typography variant="body1">
+                        {checkpoint.focusArea}
+                      </Typography>
+                      <LinearProgress
+                        variant="determinate"
+                        value={progress}
+                        sx={{
+                          height: 10,
+                          borderRadius: 5,
+                          backgroundColor: 'lightgray',
+                          '& .MuiLinearProgress-bar': {
+                            backgroundColor: 'blue',
+                          },
+                        }}
+                      />
+                      <Typography variant="body2">{`${completedTasks}/${totalTasks} tasks completed`}</Typography>
+                    </CardContent>
+                  </Card>
+                );
+              })
+            )}
           </div>
         </AccordionDetails>
       </Accordion>
@@ -291,7 +299,7 @@ const ClinicianDetails = ({ user }) => {
           <Typography variant="h6" component="h2" sx={{ textAlign: 'center' }}>
             Clinician: {user.firstName} {user.lastName}
           </Typography>
-          <Typography sx={{textAlign: 'center'}}>
+          <Typography sx={{ textAlign: 'center' }}>
             {selectedCheckpoint?.completedAt
               ? `Date Completed: ${new Date(
                   parseInt(selectedCheckpoint.completedAt)
