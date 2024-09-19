@@ -165,7 +165,7 @@ const AdminScheduleComponent = () => {
           }}
         >
           <Typography variant="h6" component="h2" sx={{ textAlign: 'center' }}>
-            Schedule Office Visit
+            Assign Check Point to Office
           </Typography>
           {confirmationMessage && (
             <Alert severity="success" sx={{ mt: 2 }}>
@@ -261,7 +261,7 @@ const AdminScheduleComponent = () => {
           }}
         >
           <Typography variant="h6" component="h2" sx={{ textAlign: 'center' }}>
-            Remove Check Points
+            Remove Office Check Point
           </Typography>
           {confirmationMessage && (
             <Alert severity="success" sx={{ mt: 2 }}>
