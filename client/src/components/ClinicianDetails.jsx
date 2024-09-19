@@ -144,6 +144,23 @@ const ClinicianDetails = ({ user }) => {
     }
   };
 
+  const handleUnassignCheckpoint = async () => {
+    try {
+      await updateCheckPoint({
+        variables: {
+          checkPointId: selectedCheckpoint._id,
+          updateData: { checkpointAssigned: false },
+        },
+        refetchQueries: [
+          { query: GET_CHECKPOINTS_BY_USER, variables: { userId: user._id } },
+        ],
+      });
+      handleClose();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
@@ -355,9 +372,17 @@ const ClinicianDetails = ({ user }) => {
             >
               Add Task
             </Button>
+            <Button
+              variant="contained"
+              color="warning"
+              onClick={handleUnassignCheckpoint}
+            >
+              Unassign Check Point
+            </Button>
             <Button variant="contained" color="secondary" onClick={handleClose}>
               Close
             </Button>
+         
           </Box>
           {showForm && (
             <Box component="form" sx={{ mt: 2 }}>
