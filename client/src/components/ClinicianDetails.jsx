@@ -313,7 +313,7 @@ const ClinicianDetails = ({ user }) => {
               <TableHead>
                 <TableRow sx={{ backgroundColor: 'lightblue' }}>
                   <TableCell sx={{ fontWeight: 'bold' }}>
-                    Task Description
+                    Task
                   </TableCell>
                   <TableCell align="center" sx={{ fontWeight: 'bold' }}>
                     Completed
