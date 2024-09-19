@@ -1,5 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Container, Select, MenuItem, FormControl, InputLabel, Typography } from '@mui/material';
+import {
+  Container,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Typography,
+} from '@mui/material';
 import ClinicianDetails from './ClinicianDetails';
 import { useQuery } from '@apollo/client';
 import { GET_USERS } from '../utils/queries';
@@ -14,7 +21,7 @@ const ClinicianProgressComponent = () => {
   useEffect(() => {
     if (data) {
       setUsers(data.users);
-      console.log(data.users[0])
+      console.log(data.users[0]);
     }
   }, [data]);
 
@@ -26,14 +33,16 @@ const ClinicianProgressComponent = () => {
   if (error) return <p>Error: {error.message}</p>;
 
   const filteredUsers = selectedOffice
-    ? users.filter(user => user.officeLocation === selectedOffice)
+    ? users.filter((user) => user.officeLocation === selectedOffice)
     : users;
 
   return (
-    <Container sx={{ mb: "1rem" }}>
-      <Typography variant='h4' sx={{ my: '.5rem', textAlign: 'center' }}>Clinician Progress</Typography>
-      
-      <FormControl fullWidth sx={{ mt: 2 }}>
+    <Container sx={{ mb: '1rem' }}>
+      <Typography variant="h4" sx={{ my: '.5rem', textAlign: 'center' }}>
+        Clinician Progress
+      </Typography>
+
+      <FormControl fullWidth sx={{ mt: 2, backgroundColor: 'white' }}>
         <InputLabel id="office-select-label">Select Office Location</InputLabel>
         <Select
           labelId="office-select-label"
@@ -41,15 +50,17 @@ const ClinicianProgressComponent = () => {
           onChange={(e) => setSelectedOffice(e.target.value)}
           label="Select Office Location"
         >
-          {Array.from(new Set(users.map(user => user.officeLocation))).map((location) => (
-            <MenuItem key={location} value={location}>
-              {location}
-            </MenuItem>
-          ))}
+          {Array.from(new Set(users.map((user) => user.officeLocation))).map(
+            (location) => (
+              <MenuItem key={location} value={location}>
+                {location}
+              </MenuItem>
+            )
+          )}
         </Select>
       </FormControl>
 
-      <FormControl fullWidth sx={{ mt: 2 }}>
+      <FormControl fullWidth sx={{ mt: 2, backgroundColor: 'white' }}>
         <InputLabel id="user-select-label">Select Clinician</InputLabel>
         <Select
           labelId="user-select-label"
