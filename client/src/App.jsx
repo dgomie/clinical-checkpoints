@@ -36,16 +36,15 @@ const client = new ApolloClient({
 function App() {
   return (
     <ApolloProvider client={client}>
-      <div className="min-100-vh">
-
-          <Nav />
-          {/* <Header /> */}
-          <div className="container">
-            <Outlet />
-          </div>
-          {/* <Footer /> */}
+      <div className="min-100-vh" style={{ backgroundColor: 'whitesmoke' }}>
+        <Nav />
+        <div className="container">
+          <Outlet />
+        </div>
+        {/* <Footer /> */}
       </div>
     </ApolloProvider>
   );
 }
 export default App;
+
