@@ -11,6 +11,7 @@ import {
   Checkbox,
   Button,
   Alert,
+  CircularProgress,
 } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery, useMutation } from '@apollo/client';
@@ -32,6 +33,7 @@ const CheckpointsComponent = () => {
   const [initialTasks, setInitialTasks] = useState([]);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [loadingSave, setLoadingSave] = useState(false);
 
   useEffect(() => {
     if (data) {
@@ -65,6 +67,7 @@ const CheckpointsComponent = () => {
   };
 
   const handleSave = () => {
+    setLoadingSave(true);
     const filteredTasks = tasks.map(({ __typename, checked, ...rest }) => ({
       ...rest,
       taskCompleted: checked,
@@ -82,6 +85,9 @@ const CheckpointsComponent = () => {
       .catch(() => {
         setErrorMessage('Error saving tasks. Please try again.');
         setSuccessMessage('');
+      })
+      .finally(() => {
+        setLoadingSave(false);
       });
   };
 
@@ -89,7 +95,6 @@ const CheckpointsComponent = () => {
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
-
 
   return (
     <Container>
@@ -104,19 +109,23 @@ const CheckpointsComponent = () => {
       <Typography variant="h4" align="center">
         {checkpoint.focusArea}
       </Typography>
-      <Typography sx={{textAlign: 'center'}}>
-            {checkpoint?.completedAt
-              ? `Date Completed: ${new Date(
-                  parseInt(checkpoint.completedAt)
-                ).toLocaleDateString()}`
-              : ''}
-          </Typography>
+      <Typography sx={{ textAlign: 'center' }}>
+        {checkpoint?.completedAt
+          ? `Date Completed: ${new Date(
+              parseInt(checkpoint.completedAt)
+            ).toLocaleDateString()}`
+          : ''}
+      </Typography>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow sx={{ backgroundColor: 'lightblue' }}>
-              <TableCell sx={{ fontSize: '1rem' , textAlign: 'center', fontWeight: 'bold'  }}>Task</TableCell>
-              <TableCell sx={{ fontSize: '1rem' , textAlign: 'center', fontWeight: 'bold'  }}>Completed</TableCell>
+              <TableCell sx={{ fontSize: '1rem', textAlign: 'center', fontWeight: 'bold' }}>
+                Task
+              </TableCell>
+              <TableCell sx={{ fontSize: '1rem', textAlign: 'center', fontWeight: 'bold' }}>
+                Completed
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -149,9 +158,9 @@ const CheckpointsComponent = () => {
         color="secondary"
         onClick={handleSave}
         style={{ display: 'block', margin: '20px auto' }}
-        disabled={isSaveDisabled}
+        disabled={isSaveDisabled || loadingSave}
       >
-        Save
+        {loadingSave ? <CircularProgress size={24} /> : 'Save'}
       </Button>
     </Container>
   );

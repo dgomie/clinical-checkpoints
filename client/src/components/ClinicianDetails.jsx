@@ -31,6 +31,7 @@ import {
   Select,
   FormControl,
   InputLabel,
+  CircularProgress,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -52,6 +53,7 @@ const ClinicianDetails = ({ user }) => {
   const [showForm, setShowForm] = useState(false);
   const [taskDescription, setTaskDescription] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [loadingAssign, setLoadingAssign] = useState(false);
 
   const handleOpen = (checkpoint) => {
     setSelectedCheckpoint(checkpoint);
@@ -127,6 +129,7 @@ const ClinicianDetails = ({ user }) => {
   };
 
   const handleAssignCheckpoint = async () => {
+    setLoadingAssign(true);
     try {
       await updateCheckPoint({
         variables: {
@@ -141,6 +144,8 @@ const ClinicianDetails = ({ user }) => {
       setSelectedUnassignedCheckpoint('');
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoadingAssign(false);
     }
   };
 
@@ -329,9 +334,7 @@ const ClinicianDetails = ({ user }) => {
               {/* Use small size for mobile */}
               <TableHead>
                 <TableRow sx={{ backgroundColor: 'lightblue' }}>
-                  <TableCell sx={{ fontWeight: 'bold' }}>
-                    Task
-                  </TableCell>
+                  <TableCell sx={{ fontWeight: 'bold' }}>Task</TableCell>
                   <TableCell align="center" sx={{ fontWeight: 'bold' }}>
                     Completed
                   </TableCell>
@@ -382,7 +385,6 @@ const ClinicianDetails = ({ user }) => {
             <Button variant="contained" color="secondary" onClick={handleClose}>
               Close
             </Button>
-         
           </Box>
           {showForm && (
             <Box component="form" sx={{ mt: 2 }}>
@@ -455,24 +457,35 @@ const ClinicianDetails = ({ user }) => {
               ))}
             </Select>
           </FormControl>
-          <Box
-            sx={{ display: 'flex', justifyContent: 'center', gap: 2, mt: 2 }}
-          >
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleAssignCheckpoint}
-              disabled={!selectedUnassignedCheckpoint}
-            >
-              Assign
-            </Button>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={handleAssignModalClose}
-            >
-              Close
-            </Button>
+          <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mt: 2 }}>
+            {loadingAssign ? (
+              <CircularProgress />
+            ) : (
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  gap: 2,
+                  mt: 2,
+                }}
+              >
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleAssignCheckpoint}
+                  disabled={!selectedUnassignedCheckpoint}
+                >
+                  Assign
+                </Button>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleAssignModalClose}
+                >
+                  Close
+                </Button>
+              </Box>
+            )}
           </Box>
         </Box>
       </Modal>
