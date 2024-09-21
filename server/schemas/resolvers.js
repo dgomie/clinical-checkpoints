@@ -166,7 +166,7 @@ const resolvers = {
     updateCheckpointsByFocusArea: async (_, { focusArea, officeLocation, assign }) => {
       try {
         const checkpoints = await CheckPoint.find({ focusArea });
-
+    
         const updatedCheckpoints = [];
         for (const checkpoint of checkpoints) {
           const user = await User.findById(checkpoint.userId);
@@ -174,14 +174,29 @@ const resolvers = {
             checkpoint.checkpointAssigned = assign;
             await checkpoint.save();
             updatedCheckpoints.push(checkpoint);
+            
+            const mailOptions = {
+              from: process.env.GMAIL_UN,
+              to: user.email,
+              subject: 'New Check Point Assignment',
+              text: `Hi ${user.firstName} ${user.lastName},\n\nYou have been assigned the ${focusArea}. Login to website.com to complete your tasks.\n\nBest regards,\nYour Learning Team`,
+            };
+    
+            try {
+              const info = await transporter.sendMail(mailOptions);
+              console.log(`Email sent to ${user.email}: ${info.response}`);
+            } catch (error) {
+              console.error(`Error sending email to ${user.email}:`, error);
+            }
           }
         }
-
+    
         return updatedCheckpoints;
       } catch (error) {
         throw new Error('Failed to update checkpoints.');
       }
     },
+
     addTaskToCheckPoint: async (_, { userId, focusArea, description }) => {
       try {
         const checkPoint = await CheckPoint.findOne({ userId, focusArea });
