@@ -163,10 +163,13 @@ const resolvers = {
       return checkPoint;
     },
 
-    updateCheckpointsByFocusArea: async (_, { focusArea, officeLocation, assign }) => {
+    updateCheckpointsByFocusArea: async (
+      _,
+      { focusArea, officeLocation, assign }
+    ) => {
       try {
         const checkpoints = await CheckPoint.find({ focusArea });
-    
+
         const updatedCheckpoints = [];
         for (const checkpoint of checkpoints) {
           const user = await User.findById(checkpoint.userId);
@@ -174,23 +177,25 @@ const resolvers = {
             checkpoint.checkpointAssigned = assign;
             await checkpoint.save();
             updatedCheckpoints.push(checkpoint);
-            
-            const mailOptions = {
-              from: process.env.GMAIL_UN,
-              to: user.email,
-              subject: 'New Check Point Assignment',
-              text: `Hi ${user.firstName} ${user.lastName},\n\nYou have been assigned the ${focusArea}. Login to website.com to complete your tasks.\n\nBest regards,\nYour Learning Team`,
-            };
-    
-            try {
-              const info = await transporter.sendMail(mailOptions);
-              console.log(`Email sent to ${user.email}: ${info.response}`);
-            } catch (error) {
-              console.error(`Error sending email to ${user.email}:`, error);
+
+            if (assign === true) {
+              const mailOptions = {
+                from: process.env.GMAIL_UN,
+                to: user.email,
+                subject: 'New Check Point Assignment',
+                text: `Hi ${user.firstName} ${user.lastName},\n\nYou have been assigned the ${focusArea}. Login to website.com to complete your tasks.\n\nBest regards,\nYour Learning Team`,
+              };
+
+              try {
+                const info = await transporter.sendMail(mailOptions);
+                console.log(`Email sent to ${user.email}: ${info.response}`);
+              } catch (error) {
+                console.error(`Error sending email to ${user.email}:`, error);
+              }
             }
           }
         }
-    
+
         return updatedCheckpoints;
       } catch (error) {
         throw new Error('Failed to update checkpoints.');
@@ -226,32 +231,36 @@ const resolvers = {
         if (!checkPoint) {
           throw new Error('CheckPoint not found');
         }
-    
-        const taskIndex = checkPoint.tasks.findIndex(task => task.description === description);
+
+        const taskIndex = checkPoint.tasks.findIndex(
+          (task) => task.description === description
+        );
         if (taskIndex === -1) {
           throw new Error('Task not found');
         }
-    
+
         checkPoint.tasks.splice(taskIndex, 1);
-    
+
         // Check if all remaining tasks are completed
-        if (checkPoint.tasks.every(task => task.taskCompleted)) {
+        if (checkPoint.tasks.every((task) => task.taskCompleted)) {
           checkPoint.checkpointCompleted = true;
           const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
           checkPoint.completedAt = new Date().toLocaleString('en-US', {
             timeZone: userTimeZone,
           });
-    
-          console.log('All tasks are completed. Sending emails to admin users.');
-    
+
+          console.log(
+            'All tasks are completed. Sending emails to admin users.'
+          );
+
           const user = await User.findById(checkPoint.userId);
           if (!user) {
             throw new Error('User not found.');
           }
-    
+
           const adminUsers = await User.find({ isAdmin: true });
           console.log(`Fetched ${adminUsers.length} admin users.`);
-    
+
           for (const admin of adminUsers) {
             console.log(`Preparing to send email to ${admin.email}`);
             const mailOptions = {
@@ -260,7 +269,7 @@ const resolvers = {
               subject: 'Checkpoint Completed',
               text: `${user.firstName} ${user.lastName} of the ${user.officeLocation} office has completed all tasks of the "${checkPoint.focusArea}" on ${checkPoint.completedAt}.`,
             };
-    
+
             try {
               const info = await transporter.sendMail(mailOptions);
               console.log(`Email sent to ${admin.email}: ${info.response}`);
@@ -272,9 +281,9 @@ const resolvers = {
           checkPoint.checkpointCompleted = false;
           checkPoint.completedAt = null;
         }
-    
+
         await checkPoint.save();
-    
+
         return checkPoint;
       } catch (error) {
         throw new Error(error.message);
