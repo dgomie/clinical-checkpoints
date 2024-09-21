@@ -122,6 +122,28 @@ const resolvers = {
 
       Object.assign(checkPoint, updateData);
 
+      // Check if checkpointAssigned is true and send notification email
+      if (updateData.checkpointAssigned === true) {
+        const user = await User.findById(checkPoint.userId);
+        if (!user) {
+          throw new Error('User not found.');
+        }
+
+        const mailOptions = {
+          from: process.env.GMAIL_UN,
+          to: user.email,
+          subject: 'Checkpoint Assigned',
+          text: `Hi ${user.firstName} ${user.lastName},\n\nYou have been assigned the ${focusArea}. Login to website.com to complete your tasks.\n\nBest regards,\nYour Learning Team`,
+        };
+
+        try {
+          const info = await transporter.sendMail(mailOptions);
+          console.log(`Email sent to ${user.email}: ${info.response}`);
+        } catch (error) {
+          console.error(`Error sending email to ${user.email}:`, error);
+        }
+      }
+
       if (checkPoint.tasks.every((task) => task.taskCompleted)) {
         checkPoint.checkpointCompleted = true;
         const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
