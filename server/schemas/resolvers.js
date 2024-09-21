@@ -132,7 +132,7 @@ const resolvers = {
         const mailOptions = {
           from: process.env.GMAIL_UN,
           to: user.email,
-          subject: 'Checkpoint Assigned',
+          subject: 'New Check Point Assigned',
           text: `Hi ${user.firstName} ${user.lastName},\n\nYou have been assigned the ${focusArea}. Login to website.com to complete your tasks.\n\nBest regards,\nYour Learning Team`,
         };
 
@@ -204,7 +204,7 @@ const resolvers = {
               const mailOptions = {
                 from: process.env.GMAIL_UN,
                 to: user.email,
-                subject: 'New Check Point Assignment',
+                subject: 'New Check Point Assigned',
                 text: `Hi ${user.firstName} ${user.lastName},\n\nYou have been assigned the ${focusArea}. Login to website.com to complete your tasks.\n\nBest regards,\nYour Learning Team`,
               };
 
