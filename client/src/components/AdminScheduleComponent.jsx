@@ -19,6 +19,7 @@ import {
 import { useQuery, useMutation } from '@apollo/client';
 import { GET_USERS, GET_CHECKPOINTS_BY_USER } from '../utils/queries';
 import { UPDATE_CHECKPOINTS_BY_FOCUS_AREA, ADD_TASK_TO_CHECKPOINT } from '../utils/mutations';
+import CSVComponent from './CSVcomponent';
 
 const AdminScheduleComponent = () => {
   const [openModal, setOpenModal] = useState(null); 
@@ -116,6 +117,14 @@ const AdminScheduleComponent = () => {
               onClick={() => navigate('./clinician-progress')}
             >
               View Clinician Progress
+            </Button>
+
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => navigate('./download-progress')}
+            >
+              Download Progress
             </Button>
             
             <Divider sx={{ my: 1 }} /> 
