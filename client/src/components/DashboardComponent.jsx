@@ -52,7 +52,7 @@ const DashboardComponent = () => {
   );
 
   return (
-    <Container sx={{ mb: '1rem' }}>
+    <Container sx={{ mb: '1rem', width: {md:"75%"}}}>
       <Paper
         elevation={3}
         sx={{ marginBottom: 2, padding: { xs: 2, sm: 4, md: 6 } }}
@@ -62,7 +62,7 @@ const DashboardComponent = () => {
           component="header"
           sx={{ textAlign: 'center' }}
         >
-          Welcome {userFirstName}
+          Welcome, {userFirstName}
         </Typography>
       </Paper>
       <Accordion>
