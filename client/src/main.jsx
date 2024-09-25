@@ -13,6 +13,7 @@ import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
 import PasswordResetPage from './pages/PasswordResetPage.jsx';
 import AdminPage from './pages/AdminPage.jsx';
 import ClinicianProgressPage from './pages/ClinicianProgressPage.jsx';
+import DownloadPage from './pages/DownloadPage.jsx'
 
 const router = createBrowserRouter([
   {
@@ -64,6 +65,10 @@ const router = createBrowserRouter([
       {
         path: 'admin/clinician-progress',
         element: <ClinicianProgressPage />,
+      },
+      {
+        path: 'admin/download-progress',
+        element: <DownloadPage />,
       },
     ],
   },
