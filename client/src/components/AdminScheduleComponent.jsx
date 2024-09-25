@@ -119,7 +119,13 @@ const AdminScheduleComponent = () => {
               View Clinician Progress
             </Button>
 
-            <CSVComponent />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => navigate('./download-progress')}
+            >
+              Download Progress
+            </Button>
             
             <Divider sx={{ my: 1 }} /> 
             
