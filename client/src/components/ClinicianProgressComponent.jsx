@@ -36,7 +36,7 @@ const ClinicianProgressComponent = () => {
     : users;
 
   return (
-    <Container sx={{ mb: '1rem' }}>
+    <Container sx={{ mb: '1rem', width: {md: "75%"} }}>
       <Typography variant="h4" sx={{ my: '.5rem', textAlign: 'center' }}>
         Clinician Progress
       </Typography>
