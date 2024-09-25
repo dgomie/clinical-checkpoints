@@ -9,17 +9,13 @@ const CSVComponent = () => {
   const [getCheckpoints, { loading: checkpointsLoading, error: checkpointsError, data: checkpointsData }] = useLazyQuery(GET_CHECKPOINTS_BY_USER);
   const [csvData, setCsvData] = useState('');
   const [error, setError] = useState('');
-  const [focusArea, setFocusArea] = useState('');
   const [selectedUser, setSelectedUser] = useState('');
   const [selectedUserName, setSelectedUserName] = useState({ firstName: '', lastName: '' });
-
-  const handleFocusAreaChange = (event) => {
-    setFocusArea(event.target.value);
-  };
 
   const handleUserChange = (event) => {
     const userId = event.target.value;
     setSelectedUser(userId);
+    setCsvData(''); // Reset csvData to disable the download button
     const user = usersData.users.find(u => u._id === userId);
     setSelectedUserName({ firstName: user.firstName, lastName: user.lastName });
   };
@@ -93,11 +89,9 @@ const CSVComponent = () => {
       <Button variant="contained" color="primary" onClick={generateCSV} disabled={!selectedUser}>
         Generate CSV
       </Button>
-      {csvData && (
-        <Button variant="contained" color="secondary" onClick={downloadCSV} style={{ marginLeft: '10px' }}>
-          Download CSV
-        </Button>
-      )}
+      <Button variant="contained" color="secondary" onClick={downloadCSV} style={{ marginLeft: '10px' }} disabled={!csvData}>
+        Download CSV
+      </Button>
     </div>
   );
 };

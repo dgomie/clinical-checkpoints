@@ -1,4 +1,4 @@
-import { Container, Paper, Typography } from '@mui/material';
+import { Container, Divider, Paper, Typography } from '@mui/material';
 import CSVComponent from './CSVcomponent';
 import CSVClinicianComponent from './CSVclinicianComponent';
 
@@ -17,6 +17,7 @@ const DownloadComponent = () => {
         }}
       >
         <Typography variant='h6'>Download Check Point Progress</Typography>
+        <Divider/>
         <CSVComponent />
       </Paper>
       <Paper
@@ -30,6 +31,7 @@ const DownloadComponent = () => {
         }}
       >
         <Typography variant='h6'>Download Clinician Progress</Typography>
+        <Divider/>
         <CSVClinicianComponent />
       </Paper>
     </Container>
