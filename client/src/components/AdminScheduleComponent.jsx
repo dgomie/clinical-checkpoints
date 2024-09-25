@@ -140,7 +140,7 @@ const AdminScheduleComponent = () => {
               Download Progress
             </Button>
 
-            <Divider sx={{ my: 1 }} />
+            <Divider sx={{ width: '100%', my: 1 }} />
 
             <Button
               variant="contained"
