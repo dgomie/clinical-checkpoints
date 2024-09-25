@@ -22,7 +22,6 @@ import {
   UPDATE_CHECKPOINTS_BY_FOCUS_AREA,
   ADD_TASK_TO_CHECKPOINT,
 } from '../utils/mutations';
-import CSVComponent from './CSVcomponent';
 
 const AdminScheduleComponent = () => {
   const [openModal, setOpenModal] = useState(null);
