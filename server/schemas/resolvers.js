@@ -133,7 +133,7 @@ const resolvers = {
           from: process.env.GMAIL_UN,
           to: user.email,
           subject: 'New Check Point Assigned',
-          text: `Hi ${user.firstName} ${user.lastName},\n\nYou have been assigned the ${focusArea}. Login to website.com to complete your tasks.\n\nBest regards,\nYour Learning Team`,
+          text: `Hi ${user.firstName} ${user.lastName},\n\nYou have been assigned the ${checkPoint.focusArea}. Login to https://clinical-checkpoints.onrender.com/ to view your tasks.\n\nBest regards,\nYour Learning Team`,
         };
 
         try {
