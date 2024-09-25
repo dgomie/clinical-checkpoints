@@ -1,5 +1,6 @@
 import { Container, Paper, Typography } from '@mui/material';
 import CSVComponent from './CSVcomponent';
+import CSVClinicianComponent from './CSVclinicianComponent';
 
 const DownloadComponent = () => {
   return (
@@ -29,7 +30,7 @@ const DownloadComponent = () => {
         }}
       >
         <Typography variant='h6'>Download Clinician Progress</Typography>
-        <CSVComponent />
+        <CSVClinicianComponent />
       </Paper>
     </Container>
   );
