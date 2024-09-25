@@ -18,11 +18,14 @@ import {
 } from '@mui/material';
 import { useQuery, useMutation } from '@apollo/client';
 import { GET_USERS, GET_CHECKPOINTS_BY_USER } from '../utils/queries';
-import { UPDATE_CHECKPOINTS_BY_FOCUS_AREA, ADD_TASK_TO_CHECKPOINT } from '../utils/mutations';
+import {
+  UPDATE_CHECKPOINTS_BY_FOCUS_AREA,
+  ADD_TASK_TO_CHECKPOINT,
+} from '../utils/mutations';
 import CSVComponent from './CSVcomponent';
 
 const AdminScheduleComponent = () => {
-  const [openModal, setOpenModal] = useState(null); 
+  const [openModal, setOpenModal] = useState(null);
   const [selectedOffice, setSelectedOffice] = useState('');
   const [selectedFocusArea, setSelectedFocusArea] = useState('');
   const [selectedUser, setSelectedUser] = useState('');
@@ -34,12 +37,17 @@ const AdminScheduleComponent = () => {
   const navigate = useNavigate();
 
   const { data: usersData } = useQuery(GET_USERS);
-  const { data: checkpointsData, refetch: refetchCheckpoints } = useQuery(GET_CHECKPOINTS_BY_USER, {
-    variables: { userId: selectedUser },
-    skip: !selectedUser,
-  });
+  const { data: checkpointsData, refetch: refetchCheckpoints } = useQuery(
+    GET_CHECKPOINTS_BY_USER,
+    {
+      variables: { userId: selectedUser },
+      skip: !selectedUser,
+    }
+  );
 
-  const [updateCheckpointsByFocusArea] = useMutation(UPDATE_CHECKPOINTS_BY_FOCUS_AREA);
+  const [updateCheckpointsByFocusArea] = useMutation(
+    UPDATE_CHECKPOINTS_BY_FOCUS_AREA
+  );
   const [addTaskToCheckPoint] = useMutation(ADD_TASK_TO_CHECKPOINT);
 
   const handleOpen = (modalType) => {
@@ -65,7 +73,9 @@ const AdminScheduleComponent = () => {
           assign: true,
         },
       });
-      setConfirmationMessage(`Check Points assigned to ${selectedOffice} clinicians.`);
+      setConfirmationMessage(
+        `Check Points assigned to ${selectedOffice} clinicians.`
+      );
     } catch (error) {
       console.error('Error updating check points:', error);
     } finally {
@@ -83,14 +93,15 @@ const AdminScheduleComponent = () => {
           assign: false,
         },
       });
-      setConfirmationMessage(`Check Points removed from ${selectedOffice} clinicians.`);
+      setConfirmationMessage(
+        `Check Points removed from ${selectedOffice} clinicians.`
+      );
     } catch (error) {
       console.error('Error removing check points:', error);
     } finally {
       setLoading(false);
     }
   };
-
 
   useEffect(() => {
     if (selectedUser) {
@@ -109,12 +120,14 @@ const AdminScheduleComponent = () => {
               display: 'flex',
               flexDirection: 'column',
               gap: '1rem',
+              alignItems: 'center',
             }}
           >
             <Button
               variant="contained"
               color="primary"
               onClick={() => navigate('./clinician-progress')}
+              sx={{ width: { md: '60%' } }}
             >
               View Clinician Progress
             </Button>
@@ -123,16 +136,18 @@ const AdminScheduleComponent = () => {
               variant="contained"
               color="primary"
               onClick={() => navigate('./download-progress')}
+              sx={{ width: { md: '60%' } }}
             >
               Download Progress
             </Button>
-            
-            <Divider sx={{ my: 1 }} /> 
-            
+
+            <Divider sx={{ my: 1 }} />
+
             <Button
               variant="contained"
               color="primary"
               onClick={() => handleOpen('assign')}
+              sx={{ width: { md: '60%' } }}
             >
               Assign Check Points
             </Button>
@@ -141,11 +156,10 @@ const AdminScheduleComponent = () => {
               variant="contained"
               color="primary"
               onClick={() => handleOpen('remove')}
+              sx={{ width: { md: '60%' } }}
             >
               Remove Check Points
             </Button>
-            
-            
           </Paper>
         </Grid>
       </Grid>
@@ -241,11 +255,21 @@ const AdminScheduleComponent = () => {
                 </Select>
               </FormControl>
 
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-                <Button variant="contained" color="primary" onClick={handleAssign}>
+              <Box
+                sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}
+              >
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleAssign}
+                >
                   Assign
                 </Button>
-                <Button variant="outlined" color="secondary" onClick={handleClose}>
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  onClick={handleClose}
+                >
                   Cancel
                 </Button>
               </Box>
@@ -345,11 +369,21 @@ const AdminScheduleComponent = () => {
                 </Select>
               </FormControl>
 
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-                <Button variant="contained" color="primary" onClick={handleRemove}>
+              <Box
+                sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}
+              >
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleRemove}
+                >
                   Remove
                 </Button>
-                <Button variant="outlined" color="secondary" onClick={handleClose}>
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  onClick={handleClose}
+                >
                   Cancel
                 </Button>
               </Box>
