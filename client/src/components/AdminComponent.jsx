@@ -42,7 +42,7 @@ const AdminComponent = () => {
         <Tab label="Check Points" />
         <Tab label="Edit Users" />
       </Tabs>
-      <Box sx={{ marginTop: '2rem' }}>
+      <Box sx={{ marginTop: '2rem', width: {md: "50%"} }}>
         {selectedTab === 0 && (
           <div>
             <AdminScheduleComponent />
