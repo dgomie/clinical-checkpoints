@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery, useLazyQuery } from '@apollo/client';
 import { GET_USERS, GET_CHECKPOINTS_BY_USER } from '../utils/queries';
 import { Button, Alert, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
@@ -15,7 +15,7 @@ const CSVComponent = () => {
   const handleUserChange = (event) => {
     const userId = event.target.value;
     setSelectedUser(userId);
-    setCsvData(''); // Reset csvData to disable the download button
+    setCsvData('');
     const user = usersData.users.find(u => u._id === userId);
     setSelectedUserName({ firstName: user.firstName, lastName: user.lastName });
   };
