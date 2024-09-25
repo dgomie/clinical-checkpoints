@@ -62,7 +62,7 @@ const DashboardComponent = () => {
           component="header"
           sx={{ textAlign: 'center' }}
         >
-          Welcome, {userFirstName}
+          Welcome {userFirstName}
         </Typography>
       </Paper>
       <Accordion>
