@@ -99,12 +99,14 @@ const CSVComponent = () => {
           <MenuItem value="Wrist Clinical Check Points">Wrist Clinical Check Points</MenuItem>
         </Select>
       </FormControl>
-      <Button variant="contained" color="primary" onClick={generateCSV} disabled={!focusArea}>
-        Generate CSV
-      </Button>
-      <Button variant="contained" color="secondary" onClick={downloadCSV} style={{ marginLeft: '10px' }} disabled={!csvData}>
-        Download CSV
-      </Button>
+      <div style={{ display: 'flex', gap: '10px', marginTop: '20px', justifyContent: 'center' }}>
+        <Button variant="contained" color="primary" onClick={generateCSV} disabled={!focusArea}>
+          Generate CSV
+        </Button>
+        <Button variant="contained" color="secondary" onClick={downloadCSV} disabled={!csvData}>
+          Download CSV
+        </Button>
+      </div>
     </div>
   );
 };
