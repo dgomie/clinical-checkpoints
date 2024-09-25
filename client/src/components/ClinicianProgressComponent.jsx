@@ -21,7 +21,6 @@ const ClinicianProgressComponent = () => {
   useEffect(() => {
     if (data) {
       setUsers(data.users);
-      console.log(data.users[0]);
     }
   }, [data]);
 
