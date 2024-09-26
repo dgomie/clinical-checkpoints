@@ -173,12 +173,29 @@ const SettingsComponent = () => {
   };
 
   const handleUpdateProfile = async () => {
+    // Validate non-empty fields
+    if (!firstName.trim() || !lastName.trim() || !email.trim()) {
+      setProfileMessage('Please fill out all fields.');
+      setProfileMessageSeverity('error');
+      return;
+    }
+  
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setProfileMessage('Please enter a valid email address.');
+      setProfileMessageSeverity('error');
+      return;
+    }
+  
+    // Proceed to update profile if all fields are valid
     const updateData = {
       firstName,
       lastName,
       email,
       officeLocation,
     };
+    
     try {
       await updateUser({
         variables: { userId, updateData },
@@ -191,6 +208,7 @@ const SettingsComponent = () => {
       setProfileMessageSeverity('error');
     }
   };
+  
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleClickShowNewPassword = () => setShowNewPassword(!showNewPassword);
