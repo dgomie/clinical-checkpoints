@@ -81,13 +81,13 @@ const startApolloServer = async () => {
         from: process.env.EMAIL_USER,
         to: user.email,
         subject: 'Password Reset',
-        text: `Click the link to reset your password: ${resetLink}`,
+        text: `You've requested to change your password. Click the link below to reset your password:\n\n${resetLink}\n\nLink expires in 5 minutes.\n\n-Clinical Checkpoints Team`,
       };
   
       console.log('Sending email to:', user.email);
       await transporter.sendMail(mailOptions);
       console.log('Email sent successfully');
-      res.status(200).json({ message: 'Password reset link sent to your email' });
+      res.status(200).json({ message: 'Reset link sent to your email' });
     } catch (error) {
       console.error('Error occurred:', error);
       res.status(500).json({ message: 'An error occurred. Please try again.' });
